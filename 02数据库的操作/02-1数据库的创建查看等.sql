@@ -1,5 +1,5 @@
 1.创建数据库
-    create database 数据库名字[库选项];
+    create database [if not exists] 数据库名字 [default charset 字符集] [collate 排序规则];
     库选项
         字符集: charset 字符集,代表当前数据库下的所有表存储的数据默认指定的字符集(如果当前不指定,那么才懂DBMS默认的)
         校对集: collate 校对集
@@ -25,5 +25,8 @@
     use 数据库名字;
 
 5.删除数据库
-    drop database 数据库名字
+    drop database [if exists] 数据库名字
     删除之后文件夹就没了
+
+6.
+    select database(); 查询当前所在的数据库

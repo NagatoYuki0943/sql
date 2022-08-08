@@ -7,19 +7,24 @@
             ...
             )charset utf8mb4;
 
-        create table mb_class(
-            id int auto_increment primary key,
-            name varchar(10)
-        )
+        create table mb_students6(
+            id int not null auto_increment primary key,
+            name varchar(50) comment '姓名',
+            age int comment '年龄',
+            gender enum('male','female','futa') default 'futa' comment '性别'
+        )engine=innodb,charset=utf8mb4,comment='学生表';
 
         b.不用选择数据库
         create table 数据库.数据表(
         )
 
-        create table mb.mb_class(
-            id int auto_increment primary key,
-            name varchar(10)
-        )
+        create table mb.mb_students6(
+            id int not null auto_increment primary key,
+            name varchar(50) comment '姓名',
+            age int comment '年龄',
+            gender enum('male','female','futa') default 'futa' comment '性别'
+        )engine=innodb,charset=utf8mb4,comment='学生表';
+
 
     (2).表选项,写在)后面,分号前面
         Engine:存储引擎,mysql提供的具体存储数据的方式,默认有一个 innodb(5.5以前默认myisam)
@@ -27,7 +32,7 @@
         Collate:校对集
 
         create table mb_class(
-            id int auto_increment primary key,
+            id int not null auto_increment primary key,
             name varchar(10)
         )charset utf8;
 
@@ -42,7 +47,7 @@
         show tables like ""  使用 % 和 _
 
 3.显示创建表语句
-    show create table mb_int1;
+    show create table tables;
     查看数据表创建时的语句,此语句看到的结构不是用户当时自己输入的,是系统加工过的
 
     tips
@@ -55,6 +60,4 @@
     describe 表名;
     desc     表名;
     show columns from 表名;
-    describe mb_int1;
-    desc mb_int1;
-    show columns from mb_int1;
+
