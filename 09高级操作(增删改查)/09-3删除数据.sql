@@ -24,6 +24,7 @@
 3.删除数据可以使用排序和limit来限制
     delete from mb_int2 order by int_1 desc limit 1;
     Query OK, 1 row affected (0.12 sec) 最大的数被删除了
+
 4.delete删除数据无法重置auto_increment
 
         detele from mb_auto;

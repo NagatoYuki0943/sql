@@ -1,10 +1,21 @@
 1.完整的查询指令
     select select选项 字段列表 from 数据源 where 条件 group by 分组 having 条件 order by 排序 limit 限制;
 
+        select distinct class,sex,count(*) from mb_students1 where score > 60 group by class,sex having count(*) > 2 order by class desc, sex asc limit 2;
+        +-------+--------+----------+
+        | class | sex    | count(*) |
+        +-------+--------+----------+
+        |     6 | female |        3 |
+        |     3 | male   |        3 |
+        +-------+--------+----------+
+
+    执行顺序:
+        from -> where -> group by -> having -> select -> order by -> limit
+
 2 select选项:
     系统改如何对待查询得到的结果
-    all:默认的,全部树池
-    distinct:去除重复的,所有字段都相同
+    all:      默认的,全部数据
+    distinct: 去除重复的,所有字段都相同
 
         select all * from mb_simple; = select * from mb_simple;
         32 rows in set (0.05 sec)
@@ -146,25 +157,28 @@
             mysql中,分组默认有排序功能:按照分组字段进行排序,默认是升序
             基本语法: group by 字段1 [asc | desc],字段2 [asc | desc] //默认asc
 
-            //班级升序,性别降序
-            select class,sex,count(*),group_concat(name) from mb_students1 group by class,sex desc;
-            male在female前面
-            +-------+--------+----------+-------------------------------+
-            | class | sex    | count(*) | group_concat(name)            |
-            +-------+--------+----------+-------------------------------+
-            |     1 | male   |        3 | 赵一,李四,吴六                |
-            |     1 | female |        1 | 郑七                          |
-            |     2 | male   |        1 | 孙三                          |
-            |     2 | female |        2 | 钱二,周五                     |
-            |     3 | male   |        3 | 王八,冯九,何二十一            |
-            |     3 | female |        2 | 褚十一,韩十五                 |
-            |     4 | male   |        3 | 卫十二,沈十四,秦十八          |
-            |     4 | female |        1 | 陈十                          |
-            |     5 | male   |        2 | 杨十六,施二十三               |
-            |     5 | female |        4 | 蒋十三,朱十七,尤十九,曹二十六 |
-            |     6 | male   |        2 | 许二十,孔二十五               |
-            |     6 | female |        2 | 吕二十二,张二十四             |
-            +-------+--------+----------+-------------------------------+
+            //班级降序,性别升序
+            select class,sex,count(*) from mb_students1 group by class desc,sex asc;
+            +-------+--------+----------+
+            | class | sex    | count(*) |
+            +-------+--------+----------+
+            |     8 | male   |        1 |
+            |     8 | female |        2 |
+            |     7 | female |        2 |
+            |     6 | male   |        3 |
+            |     6 | female |        4 |
+            |     5 | male   |        2 |
+            |     5 | female |        6 |
+            |     4 | male   |        3 |
+            |     4 | female |        3 |
+            |     3 | male   |        7 |
+            |     3 | female |        3 |
+            |     2 | male   |        2 |
+            |     2 | female |        3 |
+            |     1 | male   |        3 |
+            |     1 | female |        4 |
+            |     1 | futa   |        1 |
+            +-------+--------+----------+
 
         (5) 回溯统计
             当分组进行多分组之后,往上统计的过程中,需要进行层层上报,
@@ -258,7 +272,7 @@
     +-------+------------+------------+
 
 
-    查询最低分大于100分的班的人的数据
+    查询最低分大于100分的班的全部学生
     select * from mb_students1 where class in (select class from mb_students1 group by class having min(score) > 100);
     +-----+----------+--------+-----+-------+-------+-------------+-------------+-------------+
     | id  | name     | sex    | age | class | score | create_time | update_time | delete_time |
@@ -281,10 +295,10 @@
     where之后的所有操作都是内存操作.
 
 7 order by
-    排序:根据校对规则对数据进行排序
-    语法: order by 字段 [asc | desc] //asc是默认的
+    (1)排序:根据校对规则对数据进行排序
+        语法: order by 字段 [asc | desc] //asc是默认的
 
-        (1) 测试
+        测试
         select * from mb_students1 order by score;
         +----+----------+---------+-----+-------+-------+
         | id | name     | sex     | age | class | score |
@@ -297,10 +311,10 @@
         |  9 | 冯九     | male    |  14 |     3 |    45 |
         +----+----------+---------+-----+-------+-------+
 
-    order by 也可以像group by 一样多字段排序,先按照第一个字段进行排序,再按照第二个字段排序
-    语法: order by 字段1 [asc | desc], 字段2 [asc | desc]
+    (2)order by 也可以像group by 一样多字段排序,先按照第一个字段进行排序,再按照第二个字段排序
+        语法: order by 字段1 [asc | desc], 字段2 [asc | desc]
 
-        (2) 测试
+        测试
         select * from mb_students1 order by class desc,score desc;
         +----+----------+---------+-----+-------+-------+
         | id | name     | sex     | age | class | score |
@@ -314,7 +328,7 @@
         |  1 | 赵一     | male    |  15 |     1 |    58 |
         +----+----------+---------+-----+-------+-------+
 
-8 limit
+8 limit  在 order by 之后
     限制字句:主要用来限制记录数量获取
 
     (1)记录数限制:从第一条到指定数量
@@ -357,3 +371,38 @@
             |  4 | 李四 | male |  11 |     1 |   100 |
             +----+------+------+-----+-------+-------+
 
+    (3)分页查询计算方法
+        limit 页码-1)*每页数量,每页数量
+
+            测试
+            select * from mb_students1 limit 0,10;
+            +----+------+--------+-----+-------+-------+
+            | id | name | sex    | age | class | score |
+            +----+------+--------+-----+-------+-------+
+            |  1 | 赵一 | male   |  15 |     1 |    58 |
+            |  2 | 钱二 | female |  16 |     2 |    55 |
+            |  3 | 孙三 | male   |  16 |     2 |    88 |
+            |  4 | 李四 | male   |  11 |     1 |   100 |
+            |  5 | 周五 | female |  15 |     2 |    90 |
+            |  6 | 吴六 | male   |  16 |     1 |    75 |
+            |  7 | 郑七 | female |  16 |     1 |   100 |
+            |  8 | 王八 | male   |  16 |     3 |    88 |
+            |  9 | 冯九 | male   |  14 |     3 |    45 |
+            | 10 | 陈十 | female |  14 |     4 |    96 |
+            +----+------+--------+-----+-------+-------+
+
+            select * from mb_students1 limit 10,10;
+            +----+--------+--------+-----+-------+-------+
+            | id | name   | sex    | age | class | score |
+            +----+--------+--------+-----+-------+-------+
+            | 11 | 褚十一 | female |  16 |     3 |    85 |
+            | 12 | 卫十二 | male   |  17 |     4 |    85 |
+            | 13 | 蒋十三 | female |  13 |     5 |    33 |
+            | 14 | 沈十四 | male   |  16 |     4 |    11 |
+            | 15 | 韩十五 | female |  14 |     3 |    49 |
+            | 16 | 杨十六 | male   |  17 |     5 |    94 |
+            | 17 | 朱十七 | female |  19 |     5 |    60 |
+            | 18 | 秦十八 | male   |  17 |     4 |    11 |
+            | 19 | 尤十九 | female |  11 |     5 | NULL  |
+            | 20 | 许二十 | male   |  17 |     6 |    44 |
+            +----+--------+--------+-----+-------+-------+

@@ -72,9 +72,9 @@
             +----+----------+--------+-----+-------+-------+
 
 3 逻辑运算符
-    and     与
-    or      或
-    not     非
+    and   &&  与
+    or    ||  或
+    not    !  非
 
         测试
         select * from mb_students1 where score >= 60 and score <= 100; //和between 60 and 100一样

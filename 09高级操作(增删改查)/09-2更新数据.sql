@@ -1,6 +1,6 @@
 更新数据
 1.在更新数据的时候通常一定跟随条件更新
-    update 表名 set 字段名 = 新值 where 判断条件
+    update 表名 set 字段名=新值,[字段名1=新值] where 判断条件
 
 2.如果没有条件,是全表更新,可以使用limit来限制更新的数量
     update 表名 set 字段名 = 新值 where 判断条件 limit 限制数量;
