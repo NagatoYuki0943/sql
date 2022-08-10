@@ -6,7 +6,7 @@
     (1) mysql需要客户端进行连接认证才能进行服务器操作:需要用户信息.
         MySQL中所有的用户信息都是保存在mysql数据库下的user表中
 
-        select * from mysql.user\G
+        select * from mysql.user
         *************************** 1. row ***************************
                         Host: localhost             主机地址
                         User: root                  用户名
@@ -47,14 +47,17 @@
             a.直接使用root用户在mysql.user表中添加数据
             b.专门创建用户的sql指令
                 基本语法:
-                    create user 用户名 identified by '明文密码';
-                    用户名: 用户名@主机地址
-                    主机地址: '' (空) 或者 '%'(百分号匹配)
+                    create user '用户名'@'主机名' identified by '密码'
+
+                    创建的用户没有任何权限
+                    主机地址:
+                        localhost 本地访问
+                        '' (空) 或者 '%'(百分号匹配) 任何地方可以访问
 
                         测试:
-                            create user 'user1'@'%' identified by '123456';
+                            create user 'user1'@'localhost' identified by '123456';
                             Query OK, 0 rows affected (0.38 sec)
-                            在mysql.user中可以查看新建用户
+                            在mysql.user表中可以查看新建用户
 
                         简化版创建用户
                             create user2; //这样也能执行,没有限定客户端ip,没有密码,谁都可以访问
@@ -77,11 +80,11 @@
     (3) 删除用户
         注意:mysql中user是带着host本身的(具有唯一性)
         基本语法:
-            drop user 用户名@host;
+            drop user '用户名'@'主机名'
             用户名不用加 ''
 
                 测试:
-                    drop user user2@'%';
+                    drop user 'user1'@'%';
                     Query OK, 0 rows affected (0.52 sec)
 
     (4) 修改用户密码
@@ -89,10 +92,13 @@
         需要靠该函数对密码进行加密处理
 
         a.使用专门的修改密码的指令
-            set password for 用户 = password('新的明文密码');
+            set password for '用户名'@'主机名' = password('新的明文密码');
 
                 测试:
-                    set password for 'user1'@'%' = password('654321');
+                    set password for 'user1'@'localhost' = password('654321');
 
-        b.使用更新语句update来修改表
+        b.修改用户表
+            alter user '用户名'@'主机名' identified with mysql_native_password by '新密码'
+
+        c.使用更新语句update来修改表
             update mysql.user set password = password("新的明文密码") where user = '' and host = '';

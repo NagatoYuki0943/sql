@@ -1,12 +1,14 @@
 1.完整的查询指令
     select select选项 字段列表 from 数据源 where 条件 group by 分组 having 条件 order by 排序 limit 限制;
 
-        select distinct class,sex,count(*) from mb_students1 where score > 60 group by class,sex having count(*) > 2 order by class desc, sex asc limit 2;
+        select distinct class,sex,count(*) from mb_students1 where score > 60 and age < 100
+        group by class,sex having count(*) > 1 order by class desc,sex asc limit 3;
         +-------+--------+----------+
         | class | sex    | count(*) |
         +-------+--------+----------+
+        |     8 | female |        2 |
+        |     7 | female |        2 |
         |     6 | female |        3 |
-        |     3 | male   |        3 |
         +-------+--------+----------+
 
     执行顺序:

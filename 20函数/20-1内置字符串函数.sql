@@ -60,7 +60,7 @@
     +---------------------+----------------+
 
 
-4 concat(s1,s2,s3) 将多个字符串合并成一个输出
+4 concat(s1, s2, s3) 将多个字符串合并成一个输出
     select concat(name,'-',age) from mb_students1;
     +----------------------+
     | concat(name,'-',age) |
@@ -70,7 +70,7 @@
     | 孙三-16              |
     +----------------------+
 
-  concat_ws('a',s1,s2) 将多个字符串合并成一个输出,使用a分隔
+  concat_ws('a', s1, s2) 将多个字符串合并成一个输出,使用a分隔
     select concat_ws('--',name,age) from mb_students1;
     +--------------------------+
     | concat_ws('--',name,age) |
@@ -173,25 +173,26 @@
     | abc             |
     +-----------------+
 
-9 left(s,n)  截取字符串s的前n个字符 (位置超过长度,截取所有)
-  right(s,n) 截取字符串s的后n个字符 (位置超过长度,截取所有)
-    select left("abcdefg",3);  返回 abc
+
+9 left(s, n)  截取字符串s的前n个字符 (位置超过长度,截取所有)
+  right(s, n) 截取字符串s的后n个字符 (位置超过长度,截取所有)
+    select left("abcdefg", 3);  返回 abc
     +-------------------+
     | left("abcdefg",3) |
     +-------------------+
     | abc               |
     +-------------------+
 
-    select right("abcdefg",3); 返回 efg
+    select right("abcdefg", 3); 返回 efg
     +--------------------+
-    | right("abcdefg",3) |
+    | right("abcdefg", 3) |
     +--------------------+
     | efg                |
     +--------------------+
 
 
-10 mid(s1,m,n) 从中间指定位置m开始,截取n个字符,如果不指定截取长度,直到最后
-    select mid("ABCDEFG",3),mid("ABCDEFG",3,2);
+10 mid(s1, m, n) 从中间指定位置m开始,截取n个字符,如果不指定截取长度,直到最后
+    select mid("ABCDEFG", 3),mid("ABCDEFG", 3, 2);
     +------------------+--------------------+
     | mid("ABCDEFG",3) | mid("ABCDEFG",3,2) |
     +------------------+--------------------+
@@ -199,26 +200,48 @@
     +------------------+--------------------+
 
 
-11 lpad(s1,len,s2);  在字符串s1左边处填充字符串s2,直到长度达到len
-   rpad(s1,len,s2);  在字符串s1右边处填充字符串s2,直到长度达到len
+11 lpad(s1, len, s2);  在字符串s1左边处填充字符串s2,直到长度达到len
+   rpad(s1, len, s2);  在字符串s1右边处填充字符串s2,直到长度达到len
 
-    select lpad("abc",10,"--");  结果是 -------abc
+    select lpad("abc", 10, "--");
     +---------------------+
     | lpad("abc",10,"--") |
     +---------------------+
     | -------abc          |
     +---------------------+
 
-    select rpad("abc",10,"--");  结果是 abc-------
+    select rpad("abc", 10, "--");
     +---------------------+
     | rpad("abc",10,"--") |
     +---------------------+
     | abc-------          |
     +---------------------+
 
+    select lpad(id, 5, 0) from mb_students1 limit 5;
+    +----------------+
+    | lpad(id, 5, 0) |
+    +----------------+
+    | 00001          |
+    | 00002          |
+    | 00003          |
+    | 00004          |
+    | 00005          |
+    +----------------+
 
-12 substring_index(s,delimiter,n)
-   返回从字符串s的第nu个出现的分隔符delimiter之后的字符串
+
+12 substring(s, start, len)
+   截取从start开始的长度为len的字符串
+
+    select substring("abcdefd", 2, 3);
+    +----------------------------+
+    | substring("abcdefd", 2, 3) |
+    +----------------------------+
+    | bcd                        |
+    +----------------------------+
+
+
+13 substring_index(s, delimiter, n)
+   返回从字符串s的第n个出现的分隔符delimiter之后的字符串
    如果n为正数,返回从左往右数第n个字符串左边的字符串  正-->返回左边
    如果n为负数,返回从右往左数第n个字符串右边的字符串  负-->返回右边
 
@@ -250,7 +273,7 @@
     | d-e                                 |
     +-------------------------------------+
 
-    select substring_index(substring_index("a-b-c-d-e",'-',3),'-',-1);  返回c
+    select substring_index(substring_index("a-b-c-d-e",'-',3),'-',-1);
                             里层先返回 a-b-c , 外层再返回 c
     +------------------------------------------------------------+
     | substring_index(substring_index("a-b-c-d-e",'-',3),'-',-1) |
