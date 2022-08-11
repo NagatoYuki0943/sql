@@ -16,13 +16,21 @@
     select * from mb_students2 where (age,score)=(select max(age),min(score) from mb_students1);
     Empty set
 
-    //只有这个有数据
     select * from mb_students2 where (age,score)=(select min(age),max(score) from mb_students1);
     +----+------+------+-----+-------+-------+
     | id | name | sex  | age | class | score |
     +----+------+------+-----+-------+-------+
     |  4 | 李四 | male |  11 |     1 |   100 |
     +----+------+------+-----+-------+-------+
+
+    select * from mb_students1 where (id,name)=(select id,name from mb_students1 order by score desc limit 1);
+    +-----+----------+--------+-----+-------+-------+
+    | id  | name     | sex    | age | class | score |
+    +-----+----------+--------+-----+-------+-------+
+    | 116 | 猫宫日向 | female |  17 |     8 |   526 |
+    +-----+----------+--------+-----+-------+-------+
+    1 row in set (0.05 sec)
+
 
 4 总结
     已经学过三个子查询:常见的三个子查询
