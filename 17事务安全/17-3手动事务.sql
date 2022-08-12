@@ -1,5 +1,6 @@
 1 手动事务
     不管是开始还是过程还是结束,都需要管理员手动的发送事务操作指令来实现.
+    不用管 @@autocommit 是0还是1
 
 2 命令
     (1) start transaction;  //开启事务,从这条语句开始,后面的所有语句都不会直接写入到
@@ -15,6 +16,10 @@
 
     insert into mb_int1 values(null,0);
     insert into mb_int1 values(null,1);
+
+    //增加回滚点
+    savepoint s1;
+
     insert into mb_int1 values(null,2);
     insert into mb_int1 values(null,3);
     insert into mb_int1 values(null,4);

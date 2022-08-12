@@ -12,8 +12,22 @@
     | autocommit    | ON    | ON代表开启
     +---------------+-------+
 
+    select @@autocommit;
+    +--------------+
+    | @@autocommit |
+    +--------------+
+    |            1 |
+    +--------------+
+
+
 3 关闭自动事务,系统就不会帮用户提交结果了
-    set autocommit=0/off;
+    --关闭事务
+    set autocommit = 0/off;
+    set @@autocommit = 0/off;
+    --开启事务
+    set autocommit = 1/on;
+    set @@autocommit = 1/on;
+
 
         测试:
         一个客户端插入,在另一个客户端看不到新数据

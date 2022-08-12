@@ -28,6 +28,7 @@
 4 消除笛卡尔积
     where mb_students1.id = mb_students2.id
 
+    --就是隐式内连接
     select * from mb_students1,mb_students2 where mb_students1.id = mb_students2.id;
     +----+--------+--------+-----+-------+-------+----+--------+--------+-----+-------+-------+
     | id | name   | sex    | age | class | score | id | name   | sex    | age | class | score |
