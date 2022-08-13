@@ -10,6 +10,7 @@
     grant:授予
     revoke:annul,abolish,abrogate,rescind,repeal 废除
 
+
 2 show 查询权限
     基本语法: show grants for '用户名'@'主机名';
         测试:
@@ -19,6 +20,7 @@
         +----------------------------------+
         | GRANT USAGE ON *.* TO `user1`@`` |
         +----------------------------------+
+
 
 3 grant 授予权限
     将权限分配给指定的用户
@@ -49,6 +51,7 @@
         10 rows in set (0.00 sec)
 
     给几个数据库以及几张表,使用 show 时就只能看到几个
+
 
 4 revoke 权限回收
     将权限从用户手中回收

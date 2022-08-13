@@ -1,9 +1,12 @@
 1 while循环
     循环体都是要在大型代码块(函数/存储过程/触发器)中使用
+
+
 2 基本语法
     while 条件 do
-        循环执行的代码
+        SQL逻辑...
     end while;
+
 
 3 结构标识符
     为某些特定的结构进行命名,为的是在某些地方使用名字
@@ -26,3 +29,22 @@
                 end if;
                 循环体
             end while[标志名字];
+
+
+4 案例
+    计算从1累加到n的值，n为传入的参数值。
+
+    -- A. 定义局部变量, 记录累加之后的值;
+    -- B. 每循环一次, 就会对n进行减1 , 如果n减到0, 则退出循环
+    create procedure p7(in n int)
+    begin
+        declare total int default 0;
+        while n>0 do
+            set total := total + n;
+            set n := n - 1;
+        end while;
+
+        select total;
+    end;
+
+    call p7(100);

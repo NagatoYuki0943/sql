@@ -1,9 +1,9 @@
 1 创建过程
     基本语法:
-        create procedure 过程名字([]参数列表])
+        create procedure 过程名字([参数列表])
         begin
-            过程体
-        end
+            -- SQL语句
+        end;
         结束符
 
         注意: (1) 如果过程体重只有一条指令,那么可以省略 begin 和 end
@@ -12,10 +12,11 @@
             测试:
                 create procedure mb_pro1()
                 select * from mb_students1;
-                Query OK, 0 rows affected (0.23 sec)
+
+
 
                 创建复杂过程
-                delimiter $$    //这一行单独执行
+                delimiter $$    --将 $$ 设置为结束符
                 create procedure mb_pro2()
                 begin
                     -- 求1到100之间的和
@@ -33,7 +34,8 @@
                     select @sum;
                 end
                 &&
-                delimiter ;    //这一行单独执行
+                delimiter ;    --将 ; 设置为结束符
+
 
 2 查看过程
     查看过程和查看函数完全一样,除了关键字
@@ -43,7 +45,7 @@
         ...
         27 rows in set (0.73 sec)
 
-    查看过程创建语句: show create procedure 过程名字;
+    查看过程创建语句: show create procedure 存储过程名称;
 
         show create procedure mb_pro1;
         +-----------+-----------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------+----------------------+----------------------+--------------------+

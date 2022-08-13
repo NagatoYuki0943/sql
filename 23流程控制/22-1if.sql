@@ -60,13 +60,17 @@
 
     (2) 用在复杂的语句块中(函数/存储过程/触发器)
         基本语法
-        if 条件表达式 then      //条件表达式 没有()
-            满足条件要执行的语句
-        end if;                 //后面有 ;
+        IF 条件1 THEN
+        .....
+        ELSEIF 条件2 THEN -- 可选
+        .....
+        ELSE -- 可选
+        .....
+        END IF;
 
         符合语法:代码的判断存在两面性,两面都执行
         基本语法:
-        if 条件表达式 then
+        if 条件1 then
             满足条件要执行的语句
         else
             不满足条件要执行的语句
@@ -79,3 +83,30 @@
             end if;
 
         end if;
+
+
+3 案例
+    根据定义的分数score变量，判定当前分数对应的分数等级。
+    score >= 85分，等级为优秀。
+    score >= 60分 且 score < 85分，等级为及格。
+    score < 60分，等级为不及格。
+
+    create procedure p3()
+    begin
+        declare score int default 58;
+        declare result varchar(10);
+        if score >= 85 then
+            set result := '优秀';
+        elseif score >= 60 then
+            set result := '及格';
+        else
+            set result := '不及格';
+        end if;
+        select result;
+    end;
+    call p3();
+
+    上述的需求我们虽然已经实现了，但是也存在一些问题，比如：score 分数我们是在存储过程中定义
+    死的，而且最终计算出来的分数等级，我们也仅仅是最终查询展示出来而已。
+    那么我们能不能，把score分数动态的传递进来，计算出来的分数等级是否可以作为返回值返回呢？
+    答案是肯定的，我们可以通过接下来所讲解的 参数 来解决上述的问题。

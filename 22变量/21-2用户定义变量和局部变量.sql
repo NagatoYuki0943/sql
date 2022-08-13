@@ -11,6 +11,7 @@
         set @age := 15;
         Query OK, 0 rows affected (0.00 sec)
 
+
 2 赋值变量
     mysql是专门存储数据的,允许将数据从表中去出存到变量中,要求:查询得到的数据
     必须是一行数据(一个变量对应一个字段值,mysql没有数组)
@@ -75,3 +76,25 @@
         (1) 局部变量使用declare关键字声明
         (2) 局部变量declare语句一定出现在begin和end之间(begin end是在大型语句块中使用:函数/存储过程/触发器)
         (3) 声明语法:declare 变量名 数据类型 [属性]; 属性指的是default等
+
+    1). 声明
+        declare 变量名 变量类型 [default ... ] ;
+        变量类型就是数据库字段类型：INT、BIGINT、CHAR、VARCHAR、DATE、TIME等。
+
+    2). 赋值
+        set 变量名 = 值 ;
+        set 变量名 := 值 ;
+        select 字段名 into 变量名 from 表名 ... ;
+
+    演示示例:
+    -- 声明局部变量 - declare
+    -- 赋值
+    create procedure p2()
+    begin
+        declare stu_count int default 0;
+        select count(*) into stu_count from student;
+        select stu_count;
+    end;
+    call p2();
+
+
