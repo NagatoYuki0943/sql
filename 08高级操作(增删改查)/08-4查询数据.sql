@@ -14,6 +14,7 @@
     执行顺序:
         from -> where -> group by -> having -> select -> order by -> limit
 
+
 2 select选项:
     系统改如何对待查询得到的结果
     all:      默认的,全部数据
@@ -31,6 +32,7 @@
         别名有没有引号都可以,但是数据表的别名不能加 '' ,会报错
         select name as '姓名' from simple as aaa;
         select name as 姓名 from simple as aaa;
+
 
 3 from 数据源
     from是为前面的查询提供数据,数据源只要是一个复合二维表结果的数据源即可.
@@ -81,12 +83,14 @@
         |     1 |     1 |   001 |
         +-------+-------+-------+
 
+
 4 where
     where字句:从数据表获取数据的时候,然后进行条件筛选
     数据获取原理:针对表对应的磁盘出获取所有记录(一条条),where作用就是在拿到
     一条结果就开始进行判断,判断是否符合条件,如果符合就保存,不符合就舍弃(不放到内存)
 
     where通过运算符判断
+
 
 5 group by
     窍门: group by 谁,前面就取谁
@@ -230,8 +234,8 @@
                 | NULL  | NULL   |       26 |   rollup 统计总和
                 +-------+--------+----------+
 
-6 having
 
+6 having
     having的本质和where一样,用来筛选数据
     (1)having是在group by之后,可以针对分组数据进行筛选,但是where不行
         (where是从表中取出数据,别名是在数据进入到内存之后才有的)
@@ -296,6 +300,7 @@
     强调:having在group by之后,group by是在where之后,where的时候表示将数据从磁盘拿到内存,
     where之后的所有操作都是内存操作.
 
+
 7 order by
     (1)排序:根据校对规则对数据进行排序
         语法: order by 字段 [asc | desc] //asc是默认的
@@ -329,6 +334,7 @@
         |  4 | 李四     | male    |  11 |     1 |   100 |
         |  1 | 赵一     | male    |  15 |     1 |    58 |
         +----+----------+---------+-----+-------+-------+
+
 
 8 limit  在 order by 之后
     限制字句:主要用来限制记录数量获取
@@ -408,3 +414,20 @@
             | 19 | 尤十九 | female |  11 |     5 | NULL  |
             | 20 | 许二十 | male   |  17 |     6 |    44 |
             +----+--------+--------+-----+-------+-------+
+
+
+9 distinct
+    查询不重复的数据
+        select score from students1;
+        49 rows in set (0.07 sec)
+
+        select distinct score from students1;
+        31 rows in set (0.04 sec)
+
+    联合函数使用
+        select count(score) from students1;
+        +--------------+
+        | count(score) |
+        +--------------+
+        |           48 |
+        +--------------+

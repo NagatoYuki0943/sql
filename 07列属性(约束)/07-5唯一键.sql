@@ -19,12 +19,14 @@
             )charset utf8;
 
     (3) 创建完之后也可以添加
+        --这样添加后的unique名字和列名相同
         alter table 表名 add unique(列名);
         alter table 表名 add unique key(列名);
-                create table unique3(
-                    id int primary key auto_increment,
-                    username varchar(10)
-                )charset utf8;
+
+            create table unique3(
+                id int primary key auto_increment,
+                username varchar(10)
+            )charset utf8;
 
             alter table unique3 add unique(username);
             //可以一次添加多个
@@ -64,7 +66,7 @@
         +----+----------+
 
     在查看表创建语句的时候,会看到和主键不同的一点,多出一个名字
-    UNIQUE KEY `username` (`username`) 系统会为唯一键自动创建一个名字(默认是字段名)
+    unique key `username` (`username`) 系统会为唯一键自动创建一个名字(默认是字段名)
 
 
 4 删除唯一键

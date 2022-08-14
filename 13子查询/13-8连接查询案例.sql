@@ -56,8 +56,8 @@
     表: emp , dept
     连接条件: m_emp.dept_id = m_dept.id
 
-        select e.name, e.age, e.job ,d.name from m_emp e, m_dept d where e.dept_id = d.id;
-        select e.name, e.age, e.job ,d.name from m_emp e inner join m_dept d on e.dept_id = d.id;
+        select e.name, e.age, e.job,d.name from m_emp e, m_dept d where e.dept_id = d.id;
+        select e.name, e.age, e.job,d.name from m_emp e inner join m_dept d on e.dept_id = d.id;
         +--------+-----+--------------+--------+
         | name   | age | job          | name   |
         +--------+-----+--------------+--------+
@@ -312,7 +312,7 @@
             +------+--------+
 
         ②. 查询与 "鹿杖客" , "宋远桥" 的职位和薪资相同的员工信息
-            select * from m_emp where (job,salary) in ( select job, salary from m_emp where name = '鹿杖客' or name = '宋远桥' );
+            select * from m_emp where (job,salary) in ( select job, salary from m_emp where name = '鹿杖客' or name = '宋远桥');
             +----+--------+-----+------+--------+------------+-----------+---------+
             | id | name   | age | job  | salary | entrydate  | managerid | dept_id |
             +----+--------+-----+------+--------+------------+-----------+---------+
@@ -339,6 +339,21 @@
         | 殷天正 | 2000100103 | Hadoop |
         +--------+------------+--------+
         6 rows in set (0.05 sec)
+
+
+    13). 查询选修了mysql的学生信息
+    表: student , course , student_course
+        select * from m_student where id in
+            (select studentid from m_student_course where courseid = (select id from m_course where name='mysql'));
+        select s.* from m_student s,m_student_course sc
+            where (s.id=sc.studentid) and sc.courseid=(select id from m_course c where c.name ='mysql');
+        +----+--------+------------+
+        | id | name   | no         |
+        +----+--------+------------+
+        |  1 | 黛绮丝 | 2000100101 |
+        |  2 | 谢逊   | 2000100102 |
+        +----+--------+------------+
+        2 rows in set (0.06 sec)
 
 
     14). 查询id和name为something的同学信息
