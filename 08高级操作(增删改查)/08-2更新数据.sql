@@ -5,8 +5,8 @@
 2.如果没有条件,是全表更新,可以使用limit来限制更新的数量
     update 表名 set 字段名 = 新值 where 判断条件 limit 限制数量;
 
-    (1) mb_simple有32条数据
-    select * from mb_simple;
+    (1) simple有32条数据
+    select * from simple;
     +------+
     | name |
     +------+
@@ -46,7 +46,7 @@
     32 rows in set (0.04 sec)
 
     (2) 改变4个a变成e
-    update mb_simple set name='e' where name='a' limit 4; //只更改4条,不然a全部变为e
+    update simple set name='e' where name='a' limit 4; //只更改4条,不然a全部变为e
 
     +------+
     | name |

@@ -11,8 +11,8 @@
 3 语法
     表1 cross join 表2;
 
-    select * from mb_students1 cross join mb_students2;
-    select * from mb_students1,mb_students2; 和上一行相同
+    select * from students1 cross join students2;
+    select * from students1,students2; 和上一行相同
 
     *
     *
@@ -26,10 +26,10 @@
 
 
 4 消除笛卡尔积
-    where mb_students1.id = mb_students2.id
+    where students1.id = students2.id
 
     --就是隐式内连接
-    select * from mb_students1,mb_students2 where mb_students1.id = mb_students2.id;
+    select * from students1,students2 where students1.id = students2.id;
     +----+--------+--------+-----+-------+-------+----+--------+--------+-----+-------+-------+
     | id | name   | sex    | age | class | score | id | name   | sex    | age | class | score |
     +----+--------+--------+-----+-------+-------+----+--------+--------+-----+-------+-------+

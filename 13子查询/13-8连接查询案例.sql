@@ -1,14 +1,14 @@
-1. 执行如下脚本，创建mb_mm_emp表与mb_mm_dept表并插入测试数据
-    -- 创建mb_mm_dept表，并插入数据
-    create table mb_mm_dept(
+1. 执行如下脚本，创建m_emp表与m_dept表并插入测试数据
+    -- 创建m_dept表，并插入数据
+    create table m_dept(
         id int auto_increment comment 'ID' primary key,
         name varchar(50) not null comment '部门名称'
     )comment '部门表';
-    INSERT INTO mb_mm_dept (id, name) VALUES (1, '研发部'), (2, '市场部'),(3, '财务部'), (4,'销售部'), (5, '总经办'), (6, '人事部');
+    INSERT INTO m_dept (id, name) VALUES (1, '研发部'), (2, '市场部'),(3, '财务部'), (4,'销售部'), (5, '总经办'), (6, '人事部');
 
 
-    -- 创建mb_mm_emp表，并插入数据
-    create table mb_mm_emp(
+    -- 创建m_emp表，并插入数据
+    create table m_emp(
         id int auto_increment comment 'ID' primary key,
         name varchar(50) not null comment '姓名',
         age int comment '年龄',
@@ -19,9 +19,9 @@
         dept_id int comment '部门ID'
     )comment '员工表';
     -- 添加外键
-    alter table mb_mm_emp add constraint fk_dept_id foreign key (dept_id) references mb_mm_dept(id);
+    alter table m_emp add constraint fk_dept_id foreign key (dept_id) references m_dept(id);
 
-    INSERT INTO mb_mm_emp (id, name, age, job,salary, entrydate, managerid, dept_id)
+    INSERT INTO m_emp (id, name, age, job,salary, entrydate, managerid, dept_id)
         VALUES
         (1, '金庸', 66, '总裁',20000, '2000-01-01', null,5),
         (2, '张无忌', 20, '项目经理',12500, '2005-12-05', 1,1),
@@ -42,22 +42,22 @@
         (17, '陈友谅', 42, null,2000, '2011-10-12', 1,null);
 
     -- 薪水表
-    create table mb_mm_salgrade(
+    create table m_salgrade(
         grade int,
         losal int,
         hisal int
     ) comment '薪资等级表';
-    insert into mb_mm_salgrade values (1,0,3000),(2,3001,5000),(3,5001,8000),(4,8001,10000),(5,10001,15000),
+    insert into m_salgrade values (1,0,3000),(2,3001,5000),(3,5001,8000),(4,8001,10000),(5,10001,15000),
     (6,15001,20000),(7,20001,25000),(8,25001,30000);
 
 
 2.
     1). 查询员工的姓名、年龄、职位、部门信息 （隐式内连接）
     表: emp , dept
-    连接条件: mb_mm_emp.dept_id = mb_mm_dept.id
+    连接条件: m_emp.dept_id = m_dept.id
 
-        select e.name, e.age, e.job ,d.name from mb_mm_emp e, mb_mm_dept d where e.dept_id = d.id;
-        select e.name, e.age, e.job ,d.name from mb_mm_emp e inner join mb_mm_dept d on e.dept_id = d.id;
+        select e.name, e.age, e.job ,d.name from m_emp e, m_dept d where e.dept_id = d.id;
+        select e.name, e.age, e.job ,d.name from m_emp e inner join m_dept d on e.dept_id = d.id;
         +--------+-----+--------------+--------+
         | name   | age | job          | name   |
         +--------+-----+--------------+--------+
@@ -83,10 +83,10 @@
 
     2). 查询年龄小于30岁的员工的姓名、年龄、职位、部门信息（显式内连接）
     表: emp , dept
-    连接条件: mb_mm_emp.dept_id = mb_mm_dept.id
+    连接条件: m_emp.dept_id = m_dept.id
 
-        select e.name, e.age, e.job ,d.name from mb_mm_emp e inner join mb_mm_dept d on e.dept_id = d.id where e.age < 30;
-        select e.name, e.age, e.job ,d.name from mb_mm_emp e, mb_mm_dept d where e.dept_id = d.id and e.age < 30;
+        select e.name, e.age, e.job ,d.name from m_emp e inner join m_dept d on e.dept_id = d.id where e.age < 30;
+        select e.name, e.age, e.job ,d.name from m_emp e, m_dept d where e.dept_id = d.id and e.age < 30;
         +--------+-----+--------------+--------+
         | name   | age | job          | name   |
         +--------+-----+--------------+--------+
@@ -103,10 +103,10 @@
 
     3). 查询拥有员工的部门ID、部门名称
     表: emp , dept
-    连接条件: mb_mm_emp.dept_id = mb_mm_dept.id
+    连接条件: m_emp.dept_id = m_dept.id
 
-        select distinct d.id , d.name from mb_mm_emp e , mb_mm_dept d where e.dept_id = d.id;
-        select distinct d.id,d.name from mb_mm_dept d inner join mb_mm_emp e on d.id=e.dept_id;
+        select distinct d.id , d.name from m_emp e , m_dept d where e.dept_id = d.id;
+        select distinct d.id,d.name from m_dept d inner join m_emp e on d.id=e.dept_id;
         +----+--------+
         | id | name   |
         +----+--------+
@@ -122,10 +122,10 @@
     4). 查询所有年龄大于40岁的员工, 及其归属的部门名称; 如果员工没有分配部门, 也需要展示出
     来(外连接)
     表: emp , dept
-    连接条件: mb_mm_emp.dept_id = mb_mm_dept.id
-    查询条件 : mb_mm_emp.age > 40
+    连接条件: m_emp.dept_id = m_dept.id
+    查询条件 : m_emp.age > 40
 
-        select e.*, d.name from mb_mm_emp e left join mb_mm_dept d on e.dept_id = d.id where e.age > 40;
+        select e.*, d.name from m_emp e left join m_dept d on e.dept_id = d.id where e.age > 40;
         +----+--------+-----+----------+--------+------------+-----------+---------+--------+
         | id | name   | age | job      | salary | entrydate  | managerid | dept_id | name   |
         +----+--------+-----+----------+--------+------------+-----------+---------+--------+
@@ -142,14 +142,14 @@
 
     5). 查询所有员工的工资等级
     表: emp , salgrade
-    连接条件 : mb_mm_emp.salary >= mb_mm_salgrade.losal and mb_mm_emp.salary <= mb_mm_salgrade.hisal
+    连接条件 : m_emp.salary >= m_salgrade.losal and m_emp.salary <= m_salgrade.hisal
 
         -- 方式一
-        select e.id, e.name, s.* from mb_mm_emp e , mb_mm_salgrade s where e.salary >= s.losal and e.salary <= s.hisal;
+        select e.id, e.name, s.* from m_emp e , m_salgrade s where e.salary >= s.losal and e.salary <= s.hisal;
         -- 方式二
-        select e.id, e.name, s.* from mb_mm_emp e , mb_mm_salgrade s where e.salary between s.losal and s.hisal;
+        select e.id, e.name, s.* from m_emp e , m_salgrade s where e.salary between s.losal and s.hisal;
         -- 方式三  内连接                                                       on 后面的条件可以用 > < between 等
-        select e.id, e.name, s.* from mb_mm_emp e inner join mb_mm_salgrade s on e.salary between s.losal and s.hisal;
+        select e.id, e.name, s.* from m_emp e inner join m_salgrade s on e.salary between s.losal and s.hisal;
         +----+--------+--------+-------+-------+-------+
         | id | name   | salary | grade | losal | hisal |
         +----+--------+--------+-------+-------+-------+
@@ -175,10 +175,10 @@
 
     7). 查询 大于40岁的员工的信息,部门名称 及 工资等级  同时连接多个表
     表: emp , salgrade , dept
-    连接条件 : mb_mm_emp.dept_id = mb_mm_dept.id, emp.salary between salgrade.losal and salgrade.hisal
-    查询条件 : mb_mm_emp.age > 40
+    连接条件 : m_emp.dept_id = m_dept.id, emp.salary between salgrade.losal and salgrade.hisal
+    查询条件 : m_emp.age > 40
 
-        select e.*,d.name,s.grade from mb_mm_emp e,mb_mm_dept d,mb_mm_salgrade s
+        select e.*,d.name,s.grade from m_emp e,m_dept d,m_salgrade s
         where e.dept_id=d.id and e.age > 40 and (e.salary between s.losal and s.hisal);
         +----+--------+-----+----------+--------+------------+-----------+---------+--------+-------+
         | id | name   | age | job      | salary | entrydate  | managerid | dept_id | name   | grade |
@@ -195,10 +195,10 @@
 
     6). 查询 "研发部" 所有员工的信息及 工资等级  同时连接多个表
     表: emp , salgrade , dept
-    连接条件 : mb_mm_emp.dept_id = mb_mm_dept.id, emp.salary between salgrade.losal and salgrade.hisal
-    查询条件 : mb_mm_dept.name = '研发部'
+    连接条件 : m_emp.dept_id = m_dept.id, emp.salary between salgrade.losal and salgrade.hisal
+    查询条件 : m_dept.name = '研发部'
 
-        select e.*,s.grade from mb_mm_emp e, mb_mm_dept d, mb_mm_salgrade s
+        select e.*,s.grade from m_emp e, m_dept d, m_salgrade s
         where e.dept_id=d.id and d.name='研发部' and (e.salary between s.losal and s.hisal);
         +----+--------+-----+--------------+--------+------------+-----------+---------+-------+
         | id | name   | age | job          | salary | entrydate  | managerid | dept_id | grade |
@@ -216,8 +216,8 @@
     表: emp , dept
     连接条件 : emp.dept_id = dept.id
 
-        select avg(e.salary) from mb_mm_emp e, mb_mm_dept d where e.dept_id = d.id and d.name = '研发部';
-        select avg(e.salary) from mb_mm_emp e inner join mb_mm_dept d on e.dept_id = d.id where d.name = '研发部';
+        select avg(e.salary) from m_emp e, m_dept d where e.dept_id = d.id and d.name = '研发部';
+        select avg(e.salary) from m_emp e inner join m_dept d on e.dept_id = d.id where d.name = '研发部';
         +---------------+
         | avg(e.salary) |
         +---------------+
@@ -228,9 +228,9 @@
 
     8). 查询工资比 "灭绝" 高的员工信息。
         ①. 查询 "灭绝" 的薪资
-        select salary from mb_mm_emp where name = '灭绝';
+        select salary from m_emp where name = '灭绝';
         ②. 查询比她工资高的员工数据
-        select * from mb_mm_emp where salary > ( select salary from mb_mm_emp where name = '灭绝' );
+        select * from m_emp where salary > ( select salary from m_emp where name = '灭绝' );
         +----+--------+-----+------------+--------+------------+-----------+---------+
         | id | name   | age | job        | salary | entrydate  | managerid | dept_id |
         +----+--------+-----+------------+--------+------------+-----------+---------+
@@ -247,9 +247,9 @@
 
     9). 查询比平均薪资高的员工信息
         ①. 查询员工的平均薪资
-        select avg(salary) from mb_mm_emp;
+        select avg(salary) from m_emp;
         ②. 查询比平均薪资高的员工信息
-        select * from mb_mm_emp where salary > ( select avg(salary) from mb_mm_emp );
+        select * from m_emp where salary > ( select avg(salary) from m_emp );
         +----+--------+-----+------------+--------+------------+-----------+---------+
         | id | name   | age | job        | salary | entrydate  | managerid | dept_id |
         +----+--------+-----+------------+--------+------------+-----------+---------+
@@ -265,10 +265,10 @@
 
     10). 查询低于本部门平均工资的员工信息    内连接,自己连接自己
         ①. 查询指定部门平均薪资
-        select avg(e1.salary) from mb_mm_emp e1 where e1.dept_id = 1;
-        select avg(e1.salary) from mb_mm_emp e1 where e1.dept_id = 2;
+        select avg(e1.salary) from m_emp e1 where e1.dept_id = 1;
+        select avg(e1.salary) from m_emp e1 where e1.dept_id = 2;
         ②. 查询低于本部门平均工资的员工信息
-        select * from mb_mm_emp e2 where e2.salary < (select avg(salary) from mb_mm_emp e1 where e1.dept_id = e2.dept_id);
+        select * from m_emp e2 where e2.salary < (select avg(salary) from m_emp e1 where e1.dept_id = e2.dept_id);
         +----+--------+-----+--------------+--------+------------+-----------+---------+
         | id | name   | age | job          | salary | entrydate  | managerid | dept_id |
         +----+--------+-----+--------------+--------+------------+-----------+---------+
@@ -286,7 +286,7 @@
 
 
     11). 查询所有的部门信息, 并统计部门的员工人数  子查询在select中
-        select d.id, d.name , ( select count(*) from mb_mm_emp e where e.dept_id = d.id ) '人数' from mb_mm_dept d;
+        select d.id, d.name , ( select count(*) from m_emp e where e.dept_id = d.id ) '人数' from m_dept d;
         +----+--------+------+
         | id | name   | 人数 |
         +----+--------+------+
@@ -303,7 +303,7 @@
     12). 查询与 "鹿杖客" , "宋远桥" 的职位和薪资相同的员工信息
         分解为两步执行:
         ①. 查询 "鹿杖客" , "宋远桥" 的职位和薪资
-            select job, salary from mb_mm_emp where name = '鹿杖客' or name = '宋远桥';
+            select job, salary from m_emp where name = '鹿杖客' or name = '宋远桥';
             +------+--------+
             | job  | salary |
             +------+--------+
@@ -312,7 +312,7 @@
             +------+--------+
 
         ②. 查询与 "鹿杖客" , "宋远桥" 的职位和薪资相同的员工信息
-            select * from mb_mm_emp where (job,salary) in ( select job, salary from mb_mm_emp where name = '鹿杖客' or name = '宋远桥' );
+            select * from m_emp where (job,salary) in ( select job, salary from m_emp where name = '鹿杖客' or name = '宋远桥' );
             +----+--------+-----+------+--------+------------+-----------+---------+
             | id | name   | age | job  | salary | entrydate  | managerid | dept_id |
             +----+--------+-----+------+--------+------------+-----------+---------+
@@ -325,9 +325,9 @@
 
     13). 查询所有学生的选课情况, 展示出学生名称, 学号, 课程名称   多对多中间表查询
     表: student , course , student_course
-    连接条件: student.id = student_course.studentid , course.id = student_course.courseid
+    连接条件: m_student.id = m_student_course.studentid , m_course.id = m_student_course.courseid
 
-        select s.name,s.no,c.name from mb_mm_student s,mb_mm_course c, mb_mm_student_course sc where s.id=sc.studentid and c.id=sc.courseid;
+        select s.name,s.no,c.name from m_student s,m_course c, m_student_course sc where s.id=sc.studentid and c.id=sc.courseid;
         +--------+------------+--------+
         | name   | no         | name   |
         +--------+------------+--------+
@@ -342,10 +342,10 @@
 
 
     14). 查询id和name为something的同学信息
-    select * from mb_students1 where (id,name)=(select id,name from mb_students1 order by score desc limit 1);
+        select * from students1 where (id,name)=(select id,name from students1 order by score desc limit 1);
+            +-----+----------+--------+-----+-------+-------+
+        | id  | name     | sex    | age | class | score |
         +-----+----------+--------+-----+-------+-------+
-    | id  | name     | sex    | age | class | score |
-    +-----+----------+--------+-----+-------+-------+
-    | 116 | 猫宫日向 | female |  17 |     8 |   526 |
-    +-----+----------+--------+-----+-------+-------+
-    1 row in set (0.05 sec)
+        | 116 | 猫宫日向 | female |  17 |     8 |   526 |
+        +-----+----------+--------+-----+-------+-------+
+        1 row in set (0.05 sec)

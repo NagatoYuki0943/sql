@@ -19,7 +19,7 @@
         select @变量1 := 字段[1],@变量2 := 字段[2] from 数据表 where 条件;  //要用 := ,不然出错
 
             测试:
-            select @name=name,@age=age from mb_students1 where id=1;
+            select @name=name,@age=age from students1 where id=1;
             +------------+----------+
             | @name=name | @age=age |
             +------------+----------+
@@ -28,7 +28,7 @@
             使用了= 系统会当做比较符号来比较
 
             //正确语法
-            select @name:=name,@age:=age from mb_students1 where id=1;
+            select @name:=name,@age:=age from students1 where id=1;
             +-------------+-----------+
             | @name:=name | @age:=age |
             +-------------+-----------+
@@ -39,7 +39,7 @@
         select 字段1,字段2... from 数据源 where 条件 into @变量1,@变量2,...;
 
             测试:
-            select name,age from mb_students1 where id=2 into @name,@age;
+            select name,age from students1 where id=2 into @name,@age;
             select @name;
             +-------+
             | @name |

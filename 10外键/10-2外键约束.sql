@@ -2,15 +2,15 @@
     通过建立外键关系之后,对主表和从表有一定的数据约束效率
 
     注意:外键只能使用 innodb存储引擎,myisam不支持
-        ALTER TABLE mb_foreign1 ENGINE=INNODB;
+        ALTER TABLE foreign1 ENGINE=INNODB;
 
 2 约束的基本概念
     (1) 当一个外键产生时:外键所在的表(从表)会受制于主表数据的存在而导致数据不能进行
         某些不符合规范的操作(不能插入主表不存在的数据);
-        主表 mb_students2
-        从表 mb_foreign1/2;
+        主表 students2
+        从表 foreign1/2;
 
-            desc mb_students2;
+            desc students2;
             +-------+--------------+------+-----+---------+----------------+
             | Field | Type         | Null | Key | Default | Extra          |
             +-------+--------------+------+-----+---------+----------------+
@@ -21,7 +21,7 @@
             | class | int(255)     | YES  |     | NULL    |                |
             | score | int(255)     | YES  |     | NULL    |                |
             +-------+--------------+------+-----+---------+----------------+
-            desc mb_foreign1;
+            desc foreign1;
             +-------+-------------+------+-----+---------+----------------+
             | Field | Type        | Null | Key | Default | Extra          |
             +-------+-------------+------+-----+---------+----------------+
@@ -29,7 +29,7 @@
             | name  | varchar(10) | NO   |     | NULL    |                |
             | class | int(11)     | YES  | MUL | NULL    |                |
             +-------+-------------+------+-----+---------+----------------+
-            select distinct class from mb_students2 order by class;
+            select distinct class from students2 order by class;
             +-------+
             | class |
             +-------+
@@ -40,9 +40,9 @@
             |     5 |
             |     6 |
             +-------+
-            insert into mb_foreign1 values(null,'小明',1); //正确
-            insert into mb_foreign1 values(null,'小红',7); //不正确,主表没有7
-            detele from mb_students2 where class=1;        //失败,因为class=1已经被使用了
+            insert into foreign1 values(null,'小明',1); //正确
+            insert into foreign1 values(null,'小红',7); //不正确,主表没有7
+            detele from students2 where class=1;        //失败,因为class=1已经被使用了
 
     (2) 如果一张表被其他表外键引入,那么该表的数据操作就不能随意,必须保证从表数据的
         有效性(不能随便删除一个被从表引入的记录);
@@ -62,7 +62,7 @@
     通常在进行约束指定的时候,需要指定操作:update和delete
     常用的约束模式: on update cascade on detele set null 更新级联,删除置空
 
-        alter table mb_foreign2 add foreign key(class) references mb_students2(class)
+        alter table foreign2 add foreign key(class) references students2(class)
         on update cascade on detele set null;
 
 4 约束作用

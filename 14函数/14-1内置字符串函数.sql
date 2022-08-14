@@ -4,7 +4,7 @@
 
 
 2 ASCII(s) 返回字符串s第一个字符的ASCII码值
-    select ASCII(id)  from mb_students1;
+    select ASCII(id)  from students1;
     +-----------+
     | ASCII(id) |
     +-----------+
@@ -14,7 +14,7 @@
 
 
 3 char_length(s) 返回字符串s的长度
-    select char_length(name) as length from mb_students1;
+    select char_length(name) as length from students1;
     +--------+
     | length |
     +--------+
@@ -25,7 +25,7 @@
     +--------+
 
   character_length(s) 返回字符串s的长度
-    select character_length(name) as length from mb_students1;
+    select character_length(name) as length from students1;
     +--------+
     | length |
     +--------+
@@ -36,7 +36,7 @@
     +--------+
 
   length(s) 判断字符串s的字节数(与字符集有关)
-    select length(name) as length from mb_students1;
+    select length(name) as length from students1;
     +--------+
     | length |
     +--------+
@@ -61,7 +61,7 @@
 
 
 4 concat(s1, s2, s3) 将多个字符串合并成一个输出
-    select concat(name,'-',age) from mb_students1;
+    select concat(name,'-',age) from students1;
     +----------------------+
     | concat(name,'-',age) |
     +----------------------+
@@ -71,7 +71,7 @@
     +----------------------+
 
   concat_ws('a', s1, s2) 将多个字符串合并成一个输出,使用a分隔
-    select concat_ws('--',name,age) from mb_students1;
+    select concat_ws('--',name,age) from students1;
     +--------------------------+
     | concat_ws('--',name,age) |
     +--------------------------+
@@ -217,7 +217,7 @@
     | abc-------          |
     +---------------------+
 
-    select lpad(id, 5, 0) from mb_students1 limit 5;
+    select lpad(id, 5, 0) from students1 limit 5;
     +----------------+
     | lpad(id, 5, 0) |
     +----------------+

@@ -2,7 +2,7 @@
 1 in/not in
     主查询 where 条件 in (列子查询)
 
-        select * from mb_students1 where class in (select class from mb_students1 where score > 200);
+        select * from students1 where class in (select class from students1 where score > 200);
         +-----+----------+--------+-----+-------+-------+
         | id  | name     | sex    | age | class | score |
         +-----+----------+--------+-----+-------+-------+
@@ -30,7 +30,7 @@
 
         --all
         --找到比一班中所有人分数都高的人,相当于比一班中最高的分还要高
-        select id,name,class,score from mb_students1 where score > all(select score from mb_students1 where class=1);
+        select id,name,class,score from students1 where score > all(select score from students1 where class=1);
         +-----+----------+-------+-------+
         | id  | name     | class | score |
         +-----+----------+-------+-------+
@@ -53,7 +53,7 @@
 
         --any
         --找到比一班中任何人分数都高的人,相当于比一班中最低分的人高
-        select id,name,class,score from mb_students1 where score > any(select score from mb_students1 where class=1);
+        select id,name,class,score from students1 where score > any(select score from students1 where class=1);
         +-----+------------+-------+-------+
         | id  | name       | class | score |
         +-----+------------+-------+-------+
@@ -76,7 +76,7 @@
 
         --some 正面含义和any相同
         --找到比一班中任何人分数都高的人,相当于比一班中最低分的人高
-        select id,name,class,score from mb_students1 where score > some(select score from mb_students1 where class=1);
+        select id,name,class,score from students1 where score > some(select score from students1 where class=1);
         +-----+------------+-------+-------+
         | id  | name       | class | score |
         +-----+------------+-------+-------+

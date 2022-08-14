@@ -33,7 +33,7 @@
         Query OK, 0 rows affected (0.26 sec)
 
         //user1就可以使用了,不需要退出重进,直接可以使用
-        select * from mb_int1;
+        select * from int1;
         +----+-------+
         | id | int_1 |
         +----+-------+
@@ -62,7 +62,7 @@
 
         //访问不了了
         //user1立刻不能使用了
-        select * from mb_int1;
+        select * from int1;
         ERROR 2006 (HY000): MySQL server has gone away
         No connection. Trying to reconnect...
         ERROR 1044 (42000): Access denied for user 'user1'@'' to database 'mb'

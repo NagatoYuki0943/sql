@@ -28,4 +28,4 @@
 3 示例演示
     查询建表语句 --- 默认存储引擎: InnoDB
 
-    show create table mb_students1;;
+    show create table students1;;

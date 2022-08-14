@@ -9,7 +9,7 @@
 语法
     表1 [inner,left,right] 表2 using(同名字段列表); //连接字段
 
-    select * from mb_students1 as s1 left join mb_students2 as s2 using(id);
+    select * from students1 as s1 left join students2 as s2 using(id);
     //id只会出现一次
     +----+----------+---------+-----+-------+-------+--------+---------+------+-------+-------+
     | id | name     | sex     | age | class | score | name   | sex     | age  | class | score |

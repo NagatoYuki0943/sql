@@ -9,7 +9,7 @@ row_number() over(partition by 字段)
 
     按照班级分组,每个班级降序
 
-    select id,name,class,score,row_number() over (partition by class) as 班级排名 from mb_students1;
+    select id,name,class,score,row_number() over (partition by class) as 班级排名 from students1;
 
     row_number() over (partition by class order by score desc) as 班级排名 ========> 新的一列
 
@@ -68,7 +68,7 @@ row_number() over(partition by 字段)
     +-----+------------+-------+-------+----------+
 
     按照班级分组,每个班级成绩降序
-    select id,name,score,class,row_number() over (partition by class order by score desc) as 班级排名 from mb_students1;
+    select id,name,score,class,row_number() over (partition by class order by score desc) as 班级排名 from students1;
 
     row_number() over (partition by class order by score desc) as 班级排名 ========> 新的一列
 
@@ -126,12 +126,12 @@ row_number() over(partition by 字段)
 
     查询每个班级的前两名(取两次是因为如果设了班级排名后没法直接在后面获取它)
     select s2.id,s2.name,s2.score,s2.class,s2.班级排名 from
-    (select s1.*,row_number() over (partition by class order by score desc) as 班级排名 from mb_students1 as s1) as s2
+    (select s1.*,row_number() over (partition by class order by score desc) as 班级排名 from students1 as s1) as s2
     where s2.班级排名 <=2;
 
     简化写法,因为层级不同,所以取列不用加前缀
     select id,name,score,class,班级排名 from
-    (select *,row_number() over (partition by class order by score desc) as 班级排名 from mb_students1) as s1
+    (select *,row_number() over (partition by class order by score desc) as 班级排名 from students1) as s1
     where 班级排名 <=2;
 
     +-----+------------+-------+-------+----------+

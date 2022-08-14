@@ -1,4 +1,4 @@
-mysql> desc mb_int3;
+mysql> desc int3;
 +-------+---------------------+------+-----+---------+-------+
 | Field | Type                | Null | Key | Default | Extra |
 +-------+---------------------+------+-----+---------+-------+
@@ -19,7 +19,7 @@ mysql> desc mb_int3;
     数据显示的时候,保持最高位(显示长度,那么还需要给数据字段增加 zerofill属性)
     zerofill自动加unsigned,只能是整数,负数不能使用zerofill
     不足补零,超出或者正好不补
-    alter table mb_int3 add int_7 tinyint zerofill;
+    alter table int3 add int_7 tinyint zerofill;
 
     |     1 |     1 |      1 |         1 |            1 |     1 |   001 |
                                                                 会自动补0到3位
@@ -27,4 +27,4 @@ mysql> desc mb_int3;
     不足补零,超出或者正好不补
     自己定义的时候可以自己定义长度
     如果数据超出自己定义的显示长度也没办法,也会输出,低于长度自动补0
-    alter table mb_int3 add int_8 tinyint(10) zerofill;
+    alter table int3 add int_8 tinyint(10) zerofill;

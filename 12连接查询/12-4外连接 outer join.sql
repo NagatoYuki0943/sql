@@ -22,7 +22,7 @@
     (1) 主表记录一定保存
     (2) 左连接和右连接其实互相转换(左右位置互换),但是数据对应位置会改变
 
-    select s1.id,s1.name,s2.id,s2.name from mb_students1 as s1 left join mb_students2 as s2 on s1.id=s2.id;
+    select s1.id,s1.name,s2.id,s2.name from students1 as s1 left join students2 as s2 on s1.id=s2.id;
     +----+----------+------+--------+
     | id | name     | id   | name   |
     +----+----------+------+--------+
@@ -57,7 +57,7 @@
 5 应用
     非常常用的一种数据获取方式:作为数据获取作为主表以及其他数据(关联)
 
-    select s1.id,s1.name,s2.id,s2.name from mb_students1 as s1 right join mb_students2 as s2 on s1.id=s2.id;\
+    select s1.id,s1.name,s2.id,s2.name from students1 as s1 right join students2 as s2 on s1.id=s2.id;\
     +------+--------+----+----------+
     | id   | name   | id | name     |
     +------+--------+----+----------+

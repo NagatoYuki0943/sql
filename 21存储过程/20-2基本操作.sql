@@ -10,14 +10,14 @@
               (2) 过程基本上可以完成函数的功能
 
             测试:
-                create procedure mb_pro1()
-                select * from mb_students1;
+                create procedure pro1()
+                select * from students1;
 
 
 
                 创建复杂过程
                 delimiter $$    --将 $$ 设置为结束符
-                create procedure mb_pro2()
+                create procedure pro2()
                 begin
                     -- 求1到100之间的和
                     declare i int default 1;
@@ -47,12 +47,12 @@
 
     查看过程创建语句: show create procedure 存储过程名称;
 
-        show create procedure mb_pro1;
+        show create procedure pro1;
         +-----------+-----------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------+----------------------+----------------------+--------------------+
         | Procedure | sql_mode                                                                                                              | Create Procedure                                                                  | character_set_client | collation_connection | Database Collation |
         +-----------+-----------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------+----------------------+----------------------+--------------------+
-        | mb_pro1   | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | CREATE DEFINER=`root`@`localhost` PROCEDURE `mb_pro1`()
-        select * from mb_studnets1 | utf8mb4              | utf8mb4_0900_ai_ci   | utf8_unicode_ci    |
+        | pro1   | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | CREATE DEFINER=`root`@`localhost` PROCEDURE `pro1`()
+        select * from studnets1 | utf8mb4              | utf8mb4_0900_ai_ci   | utf8_unicode_ci    |
         +-----------+-----------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------+----------------------+----------------------+--------------------+
 
 
@@ -60,7 +60,7 @@
     过程没有返回值,select不能使用
     过程有专用语法: call 过程名([实参列表])
 
-        call mb_pro1;
+        call pro1;
         +----+----------+---------+-----+-------+-------+
         | id | name     | sex     | age | class | score |
         +----+----------+---------+-----+-------+-------+
@@ -75,7 +75,7 @@
 4 删除过程
     drop procedure 过程名;
 
-        drop procedure mb_pro1;
+        drop procedure pro1;
         Query OK, 0 rows affected (0.31 sec)
 
 5 修改

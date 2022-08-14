@@ -16,10 +16,10 @@
 
         delimiter $$  //这一行单独执行
 
-        create trigger  after_insert_order_t after insert on mb_orders for each row
+        create trigger  after_insert_order_t after insert on orders for each row
         begin
            -- 更新商品库存:new代表新增的订单
-           update mb_goods set inv = inv - new.goods_num  where id = new.goods_id;
+           update goods set inv = inv - new.goods_num  where id = new.goods_id;
         end
         $$
         Query OK, 0 rows affected (0.51 sec)
@@ -27,9 +27,9 @@
         delimiter ;  //这一行单独执行
 
     验证
-        insert into mb_orders values(null,2,5),(null,3,10);
+        insert into orders values(null,2,5),(null,3,10);
 
-        mysql> select * from mb_goods;
+        mysql> select * from goods;
         +----+--------+-----+
         | id | name   | inv |
         +----+--------+-----+
@@ -44,10 +44,10 @@
         判断库存
         delimiter $$  //这一行单独执行
 
-        create trigger before_insert_order_t before insert on mb_orders for each row
+        create trigger before_insert_order_t before insert on orders for each row
         begin
             -- 取出库存数据进行判断
-            select inv from mb_goods where id = new.goods_id into @inv;
+            select inv from goods where id = new.goods_id into @inv;
 
             -- 判断
             if @inv < new.goods_num then
@@ -59,10 +59,10 @@
 
         delimiter ;  //这一行单独执行
 
-        insert into mb_orders values(null,3,9999); //报错停止执行
+        insert into orders values(null,3,9999); //报错停止执行
 
 
-        select * from mb_orders;
+        select * from orders;
         +----+----------+-----------+
         | id | goods_id | goods_num |
         +----+----------+-----------+
@@ -72,7 +72,7 @@
         +----+----------+-----------+
         3 rows in set (0.04 sec)
 
-        mysql> select * from mb_goods;
+        mysql> select * from goods;
         +----+--------+-----+
         | id | name   | inv |
         +----+--------+-----+

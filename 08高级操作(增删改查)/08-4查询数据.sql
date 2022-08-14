@@ -1,7 +1,7 @@
 1.完整的查询指令
     select select选项 字段列表 from 数据源 where 条件 group by 分组 having 条件 order by 排序 limit 限制;
 
-        select distinct class,sex,count(*) from mb_students1 where score > 60 and age < 100
+        select distinct class,sex,count(*) from students1 where score > 60 and age < 100
         group by class,sex having count(*) > 1 order by class desc,sex asc limit 3;
         +-------+--------+----------+
         | class | sex    | count(*) |
@@ -19,18 +19,18 @@
     all:      默认的,全部数据
     distinct: 去除重复的,所有字段都相同
 
-        select all * from mb_simple; = select * from mb_simple;
+        select all * from simple; = select * from simple;
         32 rows in set (0.05 sec)
 
-        select distinct * from mb_simple;
+        select distinct * from simple;
         5 rows in set (0.03 sec)
 
     (2)字段列表:有的时候从多张表获取数据那么获取数据的时候,可能出现相同名字的字段
         需要将同名的字段命名成不同字段,别名 alias
         字段名 [as] 别名
         别名有没有引号都可以,但是数据表的别名不能加 '' ,会报错
-        select name as '姓名' from mb_simple as aaa;
-        select name as 姓名 from mb_simple as aaa;
+        select name as '姓名' from simple as aaa;
+        select name as 姓名 from simple as aaa;
 
 3 from 数据源
     from是为前面的查询提供数据,数据源只要是一个复合二维表结果的数据源即可.
@@ -46,7 +46,7 @@
         数学上专业叫法:笛卡尔积
         这个操作除了给数据库造成压力没有其他作用,应该尽量避免出现笛卡尔积
 
-        select * from mb_int1,mb_int2;
+        select * from int1,int2;
 
         +----+-------+----+-------+
         | id | int_1 | id | int_1 |
@@ -63,7 +63,7 @@
         from后面跟的数据不是实体表,而是从表中查询出来得到的二维结果
         基本语法: from (select 字段 from 表名) as 别名;
 
-        select * from (select int_1,int_7 from mb_int3) as int_m;
+        select * from (select int_1,int_7 from int3) as int_m;
         +-------+-------+
         | int_1 | int_7 |
         +-------+-------+
@@ -72,7 +72,7 @@
         |     1 |   001 |
         +-------+-------+
 
-        select * from (select int_1,int_2,int_7 from mb_int3) as int_m;
+        select * from (select int_1,int_2,int_7 from int3) as int_m;
         +-------+-------+-------+
         | int_1 | int_2 | int_7 |
         +-------+-------+-------+
@@ -107,7 +107,7 @@
 
         (2)测试
             //按班级分组,查询总人数,最高分,最低分,平均分
-            select class,count(*),max(score),min(score),avg(score) from mb_students1 group by class;
+            select class,count(*),max(score),min(score),avg(score) from students1 group by class;
             +-------+----------+------------+------------+------------+
             | class | count(*) | max(score) | min(score) | avg(score) |
             +-------+----------+------------+------------+------------+
@@ -120,7 +120,7 @@
             +-------+----------+------------+------------+------------+
 
             select class,count(*),group_concat(name),max(score),min(score),avg(score)
-            from mb_students1 group by class;
+            from students1 group by class;
             +-------+----------+-----------------------------------------------+------------+------------+------------+
             | class | count(*) | group_concat(name)                            | max(score) | min(score) | avg(score) |
             +-------+----------+-----------------------------------------------+------------+------------+------------+
@@ -136,7 +136,7 @@
             将数据按照某个字段进行分组之后,在进行分组
             group by 字段1,字段2 //先按照字段1分组,再按照字段2分组
 
-            select class,sex,count(*),group_concat(name) from mb_students1 group by class,sex;
+            select class,sex,count(*),group_concat(name) from students1 group by class,sex;
             +-------+--------+----------+-------------------------------+
             | class | sex    | count(*) | group_concat(name)            |
             +-------+--------+----------+-------------------------------+
@@ -160,7 +160,7 @@
             基本语法: group by 字段1 [asc | desc],字段2 [asc | desc] //默认asc
 
             //班级降序,性别升序
-            select class,sex,count(*) from mb_students1 group by class desc,sex asc;
+            select class,sex,count(*) from students1 group by class desc,sex asc;
             +-------+--------+----------+
             | class | sex    | count(*) |
             +-------+--------+----------+
@@ -192,7 +192,7 @@
             with rollup
             基本语法: group by 字段 [asc | desc] with rollup;
 
-                select class,count(*) from mb_students1 group by class with rollup;
+                select class,count(*) from students1 group by class with rollup;
                 +-------+----------+
                 | class | count(*) |
                 +-------+----------+
@@ -205,7 +205,7 @@
                 | NULL  |       26 |   rollup 统计总和
                 +-------+----------+
 
-                select class,sex,count(*) from mb_students1 group by class,sex with rollup;
+                select class,sex,count(*) from students1 group by class,sex with rollup;
                 +-------+--------+----------+
                 | class | sex    | count(*) |
                 +-------+--------+----------+
@@ -239,8 +239,8 @@
         having可以使用聚合函数
 
     (2)查询班级人数大于等于5人的班级(先分组再筛选)
-    select class,count(*) from mb_students1 group by class having count(*) >= 5;
-    select class,count(*) as num from mb_students1 group by class having num >= 5;
+    select class,count(*) from students1 group by class having count(*) >= 5;
+    select class,count(*) as num from students1 group by class having num >= 5;
     +-------+-----+
     | class | num |
     +-------+-----+
@@ -250,7 +250,7 @@
 
 
     查询1班总成绩
-    select class,sum(score) from mb_students1 group by class having class=1;
+    select class,sum(score) from students1 group by class having class=1;
     +-------+------------+
     | class | sum(score) |
     +-------+------------+
@@ -259,7 +259,7 @@
 
 
     查询每个班最高分和最低分
-    select class,max(score),min(score) from mb_students1 group by class;
+    select class,max(score),min(score) from students1 group by class;
     +-------+------------+------------+
     | class | max(score) | min(score) |
     +-------+------------+------------+
@@ -275,7 +275,7 @@
 
 
     查询最低分大于100分的班的全部学生
-    select * from mb_students1 where class in (select class from mb_students1 group by class having min(score) > 100);
+    select * from students1 where class in (select class from students1 group by class having min(score) > 100);
     +-----+----------+--------+-----+-------+-------+-------------+-------------+-------------+
     | id  | name     | sex    | age | class | score | create_time | update_time | delete_time |
     +-----+----------+--------+-----+-------+-------+-------------+-------------+-------------+
@@ -301,7 +301,7 @@
         语法: order by 字段 [asc | desc] //asc是默认的
 
         测试
-        select * from mb_students1 order by score;
+        select * from students1 order by score;
         +----+----------+---------+-----+-------+-------+
         | id | name     | sex     | age | class | score |
         +----+----------+---------+-----+-------+-------+
@@ -317,7 +317,7 @@
         语法: order by 字段1 [asc | desc], 字段2 [asc | desc]
 
         测试
-        select * from mb_students1 order by class desc,score desc;
+        select * from students1 order by class desc,score desc;
         +----+----------+---------+-----+-------+-------+
         | id | name     | sex     | age | class | score |
         +----+----------+---------+-----+-------+-------+
@@ -339,7 +339,7 @@
         有时候获取多条记录并不能解决业务问题,会增加数据库负担
 
             测试
-            select * from mb_students1 limit 3;
+            select * from students1 limit 3;
             +----+------+--------+-----+-------+-------+
             | id | name | sex    | age | class | score |
             +----+------+--------+-----+-------+-------+
@@ -357,7 +357,7 @@
         注意:后面的length表示获取最多数量,如果数量不够,不会强求
 
             测试
-            select * from mb_students1 limit 0,2;
+            select * from students1 limit 0,2;
             +----+------+--------+-----+-------+-------+
             | id | name | sex    | age | class | score |
             +----+------+--------+-----+-------+-------+
@@ -365,7 +365,7 @@
             |  2 | 钱二 | female |  16 |     2 |    55 |
             +----+------+--------+-----+-------+-------+
 
-            select * from mb_students1 limit 2,2;
+            select * from students1 limit 2,2;
             +----+------+------+-----+-------+-------+
             | id | name | sex  | age | class | score |
             +----+------+------+-----+-------+-------+
@@ -377,7 +377,7 @@
         limit 页码-1)*每页数量,每页数量
 
             测试
-            select * from mb_students1 limit 0,10;
+            select * from students1 limit 0,10;
             +----+------+--------+-----+-------+-------+
             | id | name | sex    | age | class | score |
             +----+------+--------+-----+-------+-------+
@@ -393,7 +393,7 @@
             | 10 | 陈十 | female |  14 |     4 |    96 |
             +----+------+--------+-----+-------+-------+
 
-            select * from mb_students1 limit 10,10;
+            select * from students1 limit 10,10;
             +----+--------+--------+-----+-------+-------+
             | id | name   | sex    | age | class | score |
             +----+--------+--------+-----+-------+-------+

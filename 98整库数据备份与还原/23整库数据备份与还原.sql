@@ -24,14 +24,14 @@
 
     (3)单表备份:数据库后跟多表
                                库名 表名用空格区分
-        mysqldump -uroot -proot mb mb_students1 mb_students2 > d:/phpstudy_pro/temp/mb_students.sql
+        mysqldump -uroot -proot mb students1 students2 > d:/phpstudy_pro/temp/students.sql
 
 
     (4)查看数据
-    DROP TABLE IF EXISTS `mb_students2`;     //先删除
+    DROP TABLE IF EXISTS `students2`;     //先删除
     /*!40101 SET @saved_cs_client     = @@character_set_client */;
     SET character_set_client = utf8mb4 ;
-    CREATE TABLE `mb_students2` (            //再创建
+    CREATE TABLE `students2` (            //再创建
     `id` int(255) NOT NULL AUTO_INCREMENT,
     `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
     `sex` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -43,13 +43,13 @@
     /*!40101 SET character_set_client = @saved_cs_client */;
 
     --
-    -- Dumping data for table `mb_students2`
+    -- Dumping data for table `students2`
     --
 
-    LOCK TABLES `mb_students2` WRITE;         //最后插入数据
-    /*!40000 ALTER TABLE `mb_students2` DISABLE KEYS */;
-    INSERT INTO `mb_students2` VALUES (1,'赵一','male',15,1,58),(2,'钱二','female',16,2,55),(3,'孙三','male',16,2,88),(4,'李四','male',11,1,100),(5,'周五','female',15,2,88),(6,'吴六','male',16,1,75),(7,'郑七','female',16,1,87),(8,'王八','male',16,3,88),(9,'冯九','male',14,3,45),(10,'陈十','female',14,4,85),(11,'褚十一','female',16,3,85),(55,'卫十二','male',17,4,85),(13,'蒋十三','female',13,5,33),(14,'沈十四','male',16,4,11),(15,'韩十五','female ',14,3,49),(16,'杨十六','male',17,5,94),(17,'朱十七','female',19,5,60),(18,'秦十八','male',17,4,11),(19,'尤十九','female ',11,5,0),(30,'许二十','male',17,6,44),(31,'何二十一','male',16,3,58),(32,'吕二十二','female',15,6,59),(33,'施二十三','male',14,5,86),(34,'张二十四','female',18,6,88),(35,'孔二十五','male',14,6,80),(36,'曹二十六','female',15,4,55);
-    /*!40000 ALTER TABLE `mb_students2` ENABLE KEYS */;
+    LOCK TABLES `students2` WRITE;         //最后插入数据
+    /*!40000 ALTER TABLE `students2` DISABLE KEYS */;
+    INSERT INTO `students2` VALUES (1,'赵一','male',15,1,58),(2,'钱二','female',16,2,55),(3,'孙三','male',16,2,88),(4,'李四','male',11,1,100),(5,'周五','female',15,2,88),(6,'吴六','male',16,1,75),(7,'郑七','female',16,1,87),(8,'王八','male',16,3,88),(9,'冯九','male',14,3,45),(10,'陈十','female',14,4,85),(11,'褚十一','female',16,3,85),(55,'卫十二','male',17,4,85),(13,'蒋十三','female',13,5,33),(14,'沈十四','male',16,4,11),(15,'韩十五','female ',14,3,49),(16,'杨十六','male',17,5,94),(17,'朱十七','female',19,5,60),(18,'秦十八','male',17,4,11),(19,'尤十九','female ',11,5,0),(30,'许二十','male',17,6,44),(31,'何二十一','male',16,3,58),(32,'吕二十二','female',15,6,59),(33,'施二十三','male',14,5,86),(34,'张二十四','female',18,6,88),(35,'孔二十五','male',14,6,80),(36,'曹二十六','female',15,4,55);
+    /*!40000 ALTER TABLE `students2` ENABLE KEYS */;
     UNLOCK TABLES;
     /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

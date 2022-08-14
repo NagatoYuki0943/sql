@@ -16,7 +16,7 @@ MySQL预处理
      发送预处理: prepare 预处理名字 from '要重复执行的sql语句';
      执行预处理: execute 预处理名字
   #重复的语句
-  prepare students1_select from 'select * from mb_students1';
+  prepare students1_select from 'select * from students1';
   #执行预处理
   execute students1_select;
 
@@ -25,14 +25,14 @@ MySQL预处理
      预处理占位符:在预处理指令中要执行的sql指令,使用 ? 来代替未知数据部分
      预处理执行(using):在执行预处理的时候将对应的数据携带到预处理指令中
   #执行重复的语句:从学生表中按学生id查询学生信息:id不确定,使用 ? 代替
-  prepare student_select_id from 'select * from mb_students1 where id = ?';
+  prepare student_select_id from 'select * from students1 where id = ?';
   #执行预处理:预处理数据不能直接使用数据常量带入,需要通过变量传入
   set @id=10;  #设置变量
   execute student_select_id using @id;
 
 4.预处理可以同时设定多个占位符,在执行预处理的时候传入对应的参数即可(顺序匹配)
   #查询年龄区间的学生信息
-  prepare student_select_age from 'select * from mb_students1 where age between ? and ?';
+  prepare student_select_age from 'select * from students1 where age between ? and ?';
   #执行预处理,提供两个参数
   set @min=10;
   set @max=13;
@@ -43,7 +43,7 @@ MySQL预处理
   drop prepare student_select_id;
 
 
-mysql> prepare student_select_id from 'select * from mb_students1 where id = ?';
+mysql> prepare student_select_id from 'select * from students1 where id = ?';
 Query OK, 0 rows affected (0.03 sec)
 Statement prepared
 
@@ -58,7 +58,7 @@ mysql> execute student_select_id using @id;
 +----+------+--------+-----+-------+-------+
 
 
-mysql> prepare student_select_age from 'select * from mb_students1 where age between ? and ?';
+mysql> prepare student_select_age from 'select * from students1 where age between ? and ?';
 Query OK, 0 rows affected (0.10 sec)
 Statement prepared
 

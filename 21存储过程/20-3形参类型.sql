@@ -22,7 +22,7 @@
         创建过程
             delimiter $$    --将 $$ 设置为结束符
 
-            create procedure mb_pro3(in int_1 int,out int_2 int,inout int_3 int)
+            create procedure pro3(in int_1 int,out int_2 int,inout int_3 int)
             begin
                 -- 查看三个传入的数据的值
                 select int_1,int_2,int_3;
@@ -48,7 +48,7 @@
             delimiter ;    --将 ; 设置为结束符
 
             -- 调用过程
-            call mb_pro3(@n1,@n2,@n3);
+            call pro3(@n1,@n2,@n3);
             +-------+-------+-------+
             | int_1 | int_2 | int_3 |
             +-------+-------+-------+

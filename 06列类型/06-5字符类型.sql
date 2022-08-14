@@ -48,7 +48,7 @@
     如果数据值在255个以内,那么一个字节就够了,超过255小于65535就用两个字节保存
 
     (1)创建表
-        create table mb_enum(
+        create table enum(
             gender enum('男','女','保密')
         )charset utf8;
 
@@ -58,7 +58,7 @@
         | gender | enum('男','女','保密') | YES  |     | NULL    |       |
         +--------+------------------------+------+-----+---------+-------+
     (2) 合法数据,输入确定的值
-        insert into mb_enum values('男'),('女'),('保密');
+        insert into enum values('男'),('女'),('保密');
 
         +--------+
         | gender |
@@ -69,7 +69,7 @@
         +--------+
 
     (3) 放错误数据 enum有规范数据的功能,能够保证必须是设定的范围,其他不可以
-        insert into mb_enum values('male'),('female');
+        insert into enum values('male'),('female');
         Data truncated for column 'gender' at row 1 //插不进去
 
     (4) enum存储原理,存储的值并不是真正的字符串,而是字符串对应的下标
@@ -80,7 +80,7 @@
         如果碰到"+,-,*,/" 系统就会自动将数据转换成数值,而普通字符串转换成数值0
 
         select 字段名+0 from 表名;
-        select gender+0 from mb_enum;
+        select gender+0 from enum;
         +----------+
         | gender+0 |
         +----------+
@@ -90,7 +90,7 @@
         +----------+
 
     (5) 及软实际enum字段存储的是数值,那么实际存储的时候就可以存入数值
-        insert into mb_enum values(1),(2),(3);
+        insert into enum values(1),(2),(3);
 
         +--------+
         | gender |
@@ -117,7 +117,7 @@
 
     set和enum一样,最终存储到的依然是数字,不是字符串
     (1) 实现
-        create table mb_set(
+        create table set(
             hobby set('篮球','足球','羽毛球','乒乓球','网球','橄榄球','冰球','高俅')
         )charset utf8;
 
@@ -129,7 +129,7 @@
         hobby共1个字节
 
     (2) 插入数据,可以插入多个数据,在插入的字符串中使用 , 隔开  所有数据使用一对 '' 包裹
-        insert into mb_set values('篮球,乒乓球,足球');
+        insert into set values('篮球,乒乓球,足球');
 
         +------------------+
         | hobby            |
@@ -138,7 +138,7 @@
         +------------------+
 
     (3) 数据选项所在的数据与数据插入的顺序无关,最终变成选项对应的顺序
-        insert into mb_set values('冰球,高俅,篮球,乒乓球,足球');
+        insert into set values('冰球,高俅,篮球,乒乓球,足球');
         +----------------------------+
         | hobby                      |
         +----------------------------+
@@ -152,9 +152,9 @@
 
         b.数据在存储的时候如果被选中,那么对应的位就位1,否则为0
 
-            insert into mb_set values('篮球,乒乓球,足球')
+            insert into set values('篮球,乒乓球,足球')
                                         11010000
-            insert into mb_set values('冰球,高俅,篮球,乒乓球,足球');
+            insert into set values('冰球,高俅,篮球,乒乓球,足球');
                                         11010011
 
         c.系统在进行存储时自动将得到的最终的二进制颠倒过来,然后再转换成10进制
@@ -162,7 +162,7 @@
             存储转换   00101111  ===>> 1+2+4+8+32=47
 
         d.查看数据:按照自动转换成数值来查看
-            select hobby+0 from mb_set;
+            select hobby+0 from set;
             +---------+
             | hobby+0 |
             +---------+
@@ -171,8 +171,8 @@
             +---------+
         e.既然是数值,那么可以插入数值来设定
         注意:使用10进制插入,数字插入的前提是对应的二进制位上有对应的项,不然可能出错
-        insert into mb_set values(255);
-        insert into mb_set values(00000001);
+        insert into set values(255);
+        insert into set values(00000001);
 
         | 篮球,足球,羽毛球,乒乓球,网球,橄榄球,冰球,高俅 |
         | 篮球                                         |

@@ -35,28 +35,28 @@
 5 测试
     有两张表:一张是商品表,一张是订单表(订单中保留商品id),每次订单生成,商品表中对应的库存发生变化
     (1)创键商品表和订单表
-        create table mb_goods(
+        create table goods(
             id int primary key auto_increment,
             name varchar(20) not null,
             inv int
         )charset utf8;
         Query OK, 0 rows affected (0.52 sec)
-        create table mb_orders(
+        create table orders(
             id int primary key auto_increment,
             goods_id int not null,
             goods_num int not null
         )charset utf8;
         Query OK, 0 rows affected (0.07 sec)
 
-        insert into mb_goods values(null,'手机',1000),(null,'电脑',500),(null,'游戏机',100);
+        insert into goods values(null,'手机',1000),(null,'电脑',500),(null,'游戏机',100);
     (2) 创建触发器:如果商品表发生数据插入,那么对应的商品就应该减少库存
 
         delimiter $$  --设置 $$ 为换行符
 
-        create trigger after_insert_order_t after insert on mb_orders for each row
+        create trigger after_insert_order_t after insert on orders for each row
         begin
             -- 更新商品库存
-            update mb_goods set inv= inv - 1 where id = 1;
+            update goods set inv= inv - 1 where id = 1;
         end
         $$
 
@@ -73,13 +73,13 @@
 
 
 7 想办法触发触发器,让触发器对应的表发生对应的操作即可
-    (1) 表为 mb_goods,
+    (1) 表为 goods,
     (2) 在插入之后
     (3) 事件:insert操作
 
-        insert into mb_orders values(null,1,1);
+        insert into orders values(null,1,1);
 
-        mysql> select * from mb_orders;
+        mysql> select * from orders;
         +----+----------+-----------+
         | id | goods_id | goods_num |
         +----+----------+-----------+
@@ -87,7 +87,7 @@
         +----+----------+-----------+
         1 row in set (0.03 sec)
 
-        mysql> select * from mb_goods;
+        mysql> select * from goods;
         +----+--------+-----+
         | id | name   | inv |
         +----+--------+-----+

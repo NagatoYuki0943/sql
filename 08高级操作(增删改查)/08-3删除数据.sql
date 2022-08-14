@@ -2,7 +2,7 @@
 1.删除数据尽量不要全部删除
 
 2.删除数据可以使用limit来限制具体的删除个数
-    delete from mb_int2 limit 3;
+    delete from int2 limit 3;
     +----+-------+
     | id | int_1 |
     +----+-------+
@@ -22,19 +22,19 @@
     +----+-------+
 
 3.删除数据可以使用排序和limit来限制
-    delete from mb_int2 order by int_1 desc limit 1;
+    delete from int2 order by int_1 desc limit 1;
     Query OK, 1 row affected (0.12 sec) 最大的数被删除了
 
 4.delete删除数据无法重置auto_increment
 
-        detele from mb_auto;
+        detele from auto;
 
-        select * from mb_auto;
+        select * from auto;
         Empty set
 
-        insert into mb_auto values(null,'tom','123');
+        insert into auto values(null,'tom','123');
 
-        select * from mb_auto;
+        select * from auto;
         +----+------+------+
         | id | name | pass |
         +----+------+------+
@@ -48,11 +48,11 @@
     truncate table 表名;        只删除内容          不可恢复  可以重置 auto_increment
     truncate 表名;  和上一行一样
 
-        truncate table mb_auto;
+        truncate table auto;
 
-        insert into mb_auto values(null,'tom','123');
+        insert into auto values(null,'tom','123');
 
-        select * from mb_auto;
+        select * from auto;
         +----+------+------+
         | id | name | pass |
         +----+------+------+

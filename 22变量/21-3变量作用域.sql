@@ -16,12 +16,12 @@
         | 小明  |
         +-------+
 
-        create function mb_func3() returns char(4)
+        create function func3() returns char(4)
         return @name;
 
-        select mb_func3;
+        select func3;
         +------------+
-        | mb_func3() |
+        | func3() |
         +------------+
         | 小明       |
         +------------+

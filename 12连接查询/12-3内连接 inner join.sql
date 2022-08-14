@@ -20,8 +20,8 @@
     (6) 内连接因为不强制使用匹配条件,因此可以再数据匹配完成后使用where来限制,和on一样(建议使用on,更节省资源)
 
         测试:
-        select * from mb_students1 as s1 inner join mb_students2  as s2 on s1.id=s2.id;
-        select * from mb_students1 s1,mb_students2 s2 where s1.id=s2.id; //隐式写法,和上面一行结果相同
+        select * from students1 as s1 inner join students2  as s2 on s1.id=s2.id;
+        select * from students1 s1,students2 s2 where s1.id=s2.id; //隐式写法,和上面一行结果相同
         +----+--------+---------+-----+-------+-------+----+--------+---------+-----+-------+-------+
         | id | name   | sex     | age | class | score | id | name   | sex     | age | class | score |
         +----+--------+---------+-----+-------+-------+----+--------+---------+-----+-------+-------+
@@ -46,8 +46,8 @@
         | 19 | 尤十九 | female  |  11 |     5 | NULL  | 19 | 尤十九 | female  |  11 |     5 |     0 |
         +----+--------+---------+-----+-------+-------+----+--------+---------+-----+-------+-------+
 
-        select s1.id,s1.name,s2.id,s2.name from mb_students1 as s1 inner join mb_students2  as s2 on s1.id=s2.id;
-        select s1.id,s1.name,s2.id,s2.name from mb_students1 s1,mb_students2 s2 where s1.id=s2.id; //隐式写法,和上面一行结果相同
+        select s1.id,s1.name,s2.id,s2.name from students1 as s1 inner join students2  as s2 on s1.id=s2.id;
+        select s1.id,s1.name,s2.id,s2.name from students1 s1,students2 s2 where s1.id=s2.id; //隐式写法,和上面一行结果相同
         +----+--------+----+--------+
         | id | name   | id | name   |
         +----+--------+----+--------+
@@ -77,12 +77,12 @@
 
 
 5 选择每个班的最高分
-    select class,max(score) score from mb_students1 group by class;
+    select class,max(score) score from students1 group by class;
 
 
 6 查询班级中分数最高的女生数据
-    select s1.* from mb_students1 s1 inner join
-    (select class,max(score) as score from mb_students1 where sex="female" group by class) s2   //选择每个班级中女生分数最高的 class, score
+    select s1.* from students1 s1 inner join
+    (select class,max(score) as score from students1 where sex="female" group by class) s2   //选择每个班级中女生分数最高的 class, score
     on s1.class=s2.class and s1.score=s2.score                                                  //用原表和结果进行inner join
     where sex="female"                                                                          //再次判断女生,防止一个班中男生和女生同分数
     order by s1.class;
@@ -102,7 +102,7 @@
     +-----+------------+--------+-----+-------+-------+-------------+-------------+-------------+
 
     找每个班女生中最高分
-    select class,max(score) as score from mb_students1 where sex="female" group by class;
+    select class,max(score) as score from students1 where sex="female" group by class;
     +-------+-------+
     | class | score |
     +-------+-------+

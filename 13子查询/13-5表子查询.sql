@@ -14,9 +14,9 @@
         2.针对结果进行group by:保留每组第一个
 
         group by只返回第一个字段
-        select * from (select * from mb_students1 order by score desc) as s1 group by class;
+        select * from (select * from students1 order by score desc) as s1 group by class;
 
-        select * from (select * from mb_students1 limit 5) as s1 where s1.id=1;
+        select * from (select * from students1 limit 5) as s1 where s1.id=1;
         +----+------+------+-----+-------+-------+
         | id | name | sex  | age | class | score |
         +----+------+------+-----+-------+-------+
@@ -28,7 +28,7 @@
         A. 查询与 "鹿杖客" , "宋远桥" 的职位和薪资相同的员工信息
         分解为两步执行:
         ①. 查询 "鹿杖客" , "宋远桥" 的职位和薪资
-            select job, salary from mb_mm_emp where name = '鹿杖客' or name = '宋远桥';
+            select job, salary from m_emp where name = '鹿杖客' or name = '宋远桥';
             +------+--------+
             | job  | salary |
             +------+--------+
@@ -37,7 +37,7 @@
             +------+--------+
 
         ②. 查询与 "鹿杖客" , "宋远桥" 的职位和薪资相同的员工信息
-            select * from mb_mm_emp where (job,salary) in ( select job, salary from mb_mm_emp where name = '鹿杖客' or name = '宋远桥' );
+            select * from m_emp where (job,salary) in ( select job, salary from m_emp where name = '鹿杖客' or name = '宋远桥' );
             +----+--------+-----+------+--------+------------+-----------+---------+
             | id | name   | age | job  | salary | entrydate  | managerid | dept_id |
             +----+--------+-----+------+--------+------------+-----------+---------+
@@ -50,7 +50,7 @@
         B. 查询入职日期是 "2006-01-01" 之后的员工信息 , 及其部门信息
         分解为两步执行:
         ①. 入职日期是 "2006-01-01" 之后的员工信息
-            select * from mb_mm_emp where entrydate > '2006-01-01';
+            select * from m_emp where entrydate > '2006-01-01';
             +----+--------+-----+------+--------+------------+-----------+---------+
             | id | name   | age | job  | salary | entrydate  | managerid | dept_id |
             +----+--------+-----+------+--------+------------+-----------+---------+
@@ -63,8 +63,8 @@
             +----+--------+-----+------+--------+------------+-----------+---------+
 
         ②. 查询这部分员工, 对应的部门信息;
-            select e.*,d.* from (select * from mb_mm_emp where entrydate>'2006-01-01') e left join mb_mm_dept d on e.dept_id=d.id;
-            select e.*,d.* from mb_mm_emp e left join mb_mm_dept d on e.dept_id=d.id where e.entrydate>'2006-01-01';
+            select e.*,d.* from (select * from m_emp where entrydate>'2006-01-01') e left join m_dept d on e.dept_id=d.id;
+            select e.*,d.* from m_emp e left join m_dept d on e.dept_id=d.id where e.entrydate>'2006-01-01';
             +----+--------+-----+------+--------+------------+-----------+---------+------+--------+
             | id | name   | age | job  | salary | entrydate  | managerid | dept_id | id   | name   |
             +----+--------+-----+------+--------+------------+-----------+---------+------+--------+
@@ -77,7 +77,7 @@
             +----+--------+-----+------+--------+------------+-----------+---------+------+--------+
 
         使用隐式内连接只有5行,缺少了没有部分的员工信息
-            select e.*,d.* from mb_mm_emp e, mb_mm_dept d where e.dept_id=d.id and e.entrydate > '2006-01-01';
+            select e.*,d.* from m_emp e, m_dept d where e.dept_id=d.id and e.entrydate > '2006-01-01';
             +----+--------+-----+------+--------+------------+-----------+---------+----+--------+
             | id | name   | age | job  | salary | entrydate  | managerid | dept_id | id | name   |
             +----+--------+-----+------+--------+------------+-----------+---------+----+--------+

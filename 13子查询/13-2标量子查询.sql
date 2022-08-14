@@ -7,7 +7,7 @@
     select * from 数据源 where 条件判断 =/<>(select 字段名 from 数据源 where 条件判断) 子查询得到的值只有一个
 
     //在表1中获取id=5的学生的姓名,再根据姓名从表2中获取这个同学的信息
-    select * from mb_students2 where name = (select name from mb_students1 where id=5);
+    select * from students2 where name = (select name from students1 where id=5);
     //主查询通过name获取,name使用子查询的学号获得
     //后面的返回值只有一行一列(一个值)
     +----+------+--------+-----+-------+-------+
@@ -16,7 +16,7 @@
     |  5 | 周五 | female |  15 |     2 |    88 |
     +----+------+--------+-----+-------+-------+
 
-    select * from mb_students2 where name = (select name from mb_students1 where id=7);
+    select * from students2 where name = (select name from students1 where id=7);
     //主查询通过name获取,name使用子查询的学号获得
     //后面的返回值只有一行一列(一个值)
     +----+------+--------+-----+-------+-------+

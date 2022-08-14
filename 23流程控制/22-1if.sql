@@ -6,7 +6,7 @@
         语法 if(条件,为真结果,为假结果) as 别名
             select *,if(age>15,'符合','不符合') as judge
             测试
-            select *,if(age>15,'符合','不符合') as judge from mb_students1;
+            select *,if(age>15,'符合','不符合') as judge from students1;
             +----+----------+--------+-----+-------+-------+-------+
             | id | name     | sex    | age | class | score | judge |
             +----+----------+--------+-----+-------+-------+-------+
@@ -26,7 +26,7 @@
             | 24 | 张二十四 | female |  18 |     6 |    88 | 符合  |
             +----+----------+--------+-----+-------+-------+-------+
 
-            select *,if(age>15,'符合','不符合') as judge from mb_students1 ;
+            select *,if(age>15,'符合','不符合') as judge from students1 ;
             +----+----------+---------+-----+-------+-------+--------+
             | id | name     | sex     | age | class | score | judge  |
             +----+----------+---------+-----+-------+-------+--------+

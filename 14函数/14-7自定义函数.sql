@@ -26,7 +26,7 @@
             测试:
                 //修改语句结束符
                 delimiter $$    //这一行单独执行
-                create function mb_func1() returns int
+                create function func1() returns int
                 begin
                     return 10;
                 end
@@ -42,7 +42,7 @@
 
             测试:
                 delimiter $$    //这一行单独执行
-                create function mb_func2(int_1 int,int_2 int) returns int
+                create function func2(int_1 int,int_2 int) returns int
                 return int_1+int_2;
                 $$
                 delimiter ;    //这一行单独执行
@@ -59,14 +59,14 @@
     自定义函数的调用与内置函数调用相同
     语法: select 函数名(实参列表);
 
-        select mb_func1;
-        select mb_func2(1,2);
+        select func1;
+        select func2(1,2);
 
 5 删除函数
     基本语法: drop function 函数名;
 
-        drop function mb_func1;
-        drop function mb_func2;
+        drop function func1;
+        drop function func2;
 
 6 注意事项
     (1) 自定义函数是属于用户级别的,只有当前客户端对应的数据库中可以使用

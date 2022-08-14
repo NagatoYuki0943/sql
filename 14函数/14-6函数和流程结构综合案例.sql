@@ -17,7 +17,7 @@
     -- 修改语句结束符
     delimiter $$    //这一行单独执行
     -- 创建函数
-    create function mb_sum(end_value int) returns int
+    create function sum(end_value int) returns int
     begin
         -- 声明局部变量 :如果使用declare声明变量,必须在函数体其他语句之前
         declare res int = 0;

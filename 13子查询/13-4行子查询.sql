@@ -7,23 +7,23 @@
 3 语法
     主查询 where 条件 [(构造一个行元素)] = (行子查询);
 
-    select * from mb_students2 where (age,score)=(select max(age),max(score) from mb_students1);
+    select * from students2 where (age,score)=(select max(age),max(score) from students1);
     Empty set
 
-    select * from mb_students2 where (age,score)=(select min(age),min(score) from mb_students1);
+    select * from students2 where (age,score)=(select min(age),min(score) from students1);
     Empty set
 
-    select * from mb_students2 where (age,score)=(select max(age),min(score) from mb_students1);
+    select * from students2 where (age,score)=(select max(age),min(score) from students1);
     Empty set
 
-    select * from mb_students2 where (age,score)=(select min(age),max(score) from mb_students1);
+    select * from students2 where (age,score)=(select min(age),max(score) from students1);
     +----+------+------+-----+-------+-------+
     | id | name | sex  | age | class | score |
     +----+------+------+-----+-------+-------+
     |  4 | 李四 | male |  11 |     1 |   100 |
     +----+------+------+-----+-------+-------+
 
-    select * from mb_students1 where (id,name)=(select id,name from mb_students1 order by score desc limit 1);
+    select * from students1 where (id,name)=(select id,name from students1 order by score desc limit 1);
     +-----+----------+--------+-----+-------+-------+
     | id  | name     | sex    | age | class | score |
     +-----+----------+--------+-----+-------+-------+

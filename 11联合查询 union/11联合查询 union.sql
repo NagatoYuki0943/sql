@@ -10,9 +10,9 @@
 2 应用场景
     (1) 将同一张表中不同的结果(需要针对多条查询语句来实现),合并到一起展示数据
         测试:男生年龄升序排序,女生身高年龄排序
-        (select * from mb_students1 where sex='male' order by age asc)
+        (select * from students1 where sex='male' order by age asc)
         union
-        (select * from mb_students1 where sex='female' order by age desc);
+        (select * from students1 where sex='female' order by age desc);
 
     (2) 最常见,在数据量大的情况下,会对表进行分表操作,需要对每张表进行部分数据统计,
         使用联合查询来将数据放到一起
@@ -30,9 +30,9 @@
     (1) 在联合查询中,如果要使用 order by,必须使用括号括起来
     (2) order by 要想生效,必须配合limit,而limit后面必须更对应的限制数量(可使用一个对应的值,大于记录数)
 
-        (select * from mb_students1 where sex='male' order by age asc)
+        (select * from students1 where sex='male' order by age asc)
         union
-        (select * from mb_students1 where sex='female' order by age desc);
+        (select * from students1 where sex='female' order by age desc);
         //order by没有生效
         +----+----------+---------+-----+-------+-------+
         | id | name     | sex     | age | class | score |
@@ -65,9 +65,9 @@
         | 26 | 曹二十六 | female  |  15 |     5 |    55 |
         +----+----------+---------+-----+-------+-------+
 
-        (select * from mb_students1 where sex='male' order by age asc limit 100)
+        (select * from students1 where sex='male' order by age asc limit 100)
         union
-        (select * from mb_students1 where sex='female' order by age desc limit 100);
+        (select * from students1 where sex='female' order by age desc limit 100);
         //加了limit可以正常使用了
         +----+----------+---------+-----+-------+-------+
         | id | name     | sex     | age | class | score |

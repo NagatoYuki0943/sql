@@ -11,11 +11,11 @@
 
 2 增加外键
     注意:外键只能使用 innodb存储引擎,myisam不支持
-        ALTER TABLE mb_foreign1 ENGINE=INNODB;
+        ALTER TABLE foreign1 ENGINE=INNODB;
         外键字段必须有约束,比如unique,primary key等
 
     先新建一张表作为外键
-        CREATE TABLE `mb_foreign0` (
+        CREATE TABLE `foreign0` (
         id int(11) NOT NULL AUTO_INCREMENT,
         class int(11) NOT NULL,
         PRIMARY KEY (id),
@@ -28,15 +28,15 @@
             [constraint `外键名`] 可以自己定义外键名,不给的话系统默认有
             [constraint `外键名`] foreign key(外键字段) references 主表(主键)   ' ` '是反引号,[]代表可写
                 测试:
-                create table mb_foreign1(
+                create table foreign1(
                     id int primary key auto_increment,
                     name varchar(10) not null,
-                    -- 关联mb_studnets2
+                    -- 关联studnets2
                     class int,
                     -- 增加外键
-                    constraint f_class foreign key(class) references mb_foreign0(class)
+                    constraint f_class foreign key(class) references foreign0(class)
                 )charset utf8 ENGINE=INNODB;
-                    desc mb_foreign1;
+                    desc foreign1;
                 +-------+-------------+------+-----+---------+----------------+
                 | Field | Type        | Null | Key | Default | Extra          |
                 +-------+-------------+------+-----+---------+----------------+
@@ -46,8 +46,8 @@
                 +-------+-------------+------+-----+---------+----------------+
             MUL 多索引,外键本身是一个索引,外键要求外键字段本身也是一种普通索引
 
-                show create table mb_foreign1;
-                | mb_foreign | CREATE TABLE `mb_foreign` (
+                show create table foreign1;
+                | foreign | CREATE TABLE `foreign` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `name` varchar(10) NOT NULL,
                 `class` int(11) DEFAULT NULL,
@@ -58,9 +58,9 @@
         b.在创建表之后增加外键
             alter table 从表 add constraint `外键名` foreign key(外键字段) references 主表(主键)
 
-                //测试,将mb_foreign2的class关联到mb_students2的class
-                alter table mb_foreign2 add constraint f_class foreign key(class) references mb_foreign0(class);
-                desc mb_foreign2;
+                //测试,将foreign2的class关联到students2的class
+                alter table foreign2 add constraint f_class foreign key(class) references foreign0(class);
+                desc foreign2;
                 +-------+-------------+------+-----+---------+----------------+
                 | Field | Type        | Null | Key | Default | Extra          |
                 +-------+-------------+------+-----+---------+----------------+
@@ -75,8 +75,8 @@
     语法: alter table 从表 drop foreign key '外键名'; //外键名是系统默认的或者自己增加的,反引号可加可不加
 
             测试:
-            alter table mb_foreign1 drop foreign key f_class;
-            desc mb_foreign2;
+            alter table foreign1 drop foreign key f_class;
+            desc foreign2;
             +-------+-------------+------+-----+---------+----------------+
             | Field | Type        | Null | Key | Default | Extra          |
             +-------+-------------+------+-----+---------+----------------+
@@ -87,8 +87,8 @@
     还有MUL,外键创建会自动增加一层索引,但是外键删除只会删除自己,不会删除普通索引,所以还有MUL
     如果想删除对应的索引:alter table 从表 drop index 索引名字;
 
-            alter table mb_foreign2 drop index class;
-            desc mb_foreign2;
+            alter table foreign2 drop index class;
+            desc foreign2;
             +-------+-------------+------+-----+---------+----------------+
             | Field | Type        | Null | Key | Default | Extra          |
             +-------+-------------+------+-----+---------+----------------+

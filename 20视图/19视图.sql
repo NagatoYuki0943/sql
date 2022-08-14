@@ -9,11 +9,11 @@
 
         测试:
         create view student_v as                            //这样有重复字段
-        select s1.id,s1.name,s2.id,s2.name from mb_students1 as s1
-        left join mb_students2 as s2 on s1.id=s2.id;
+        select s1.id,s1.name,s2.id,s2.name from students1 as s1
+        left join students2 as s2 on s1.id=s2.id;
 
         create view student_v as
-        select * from mb_students1;
+        select * from students1;
         Query OK, 0 rows affected (0.70 sec)
 
 
@@ -84,7 +84,7 @@
         alter view 视图名 as 新select指令;
 
         测试:
-        alter view student_v as select id,name from mb_students2;
+        alter view student_v as select id,name from students2;
         Query OK, 0 rows affected (0.75 sec)
         select * from student_v;
         +----+----------+
@@ -130,7 +130,7 @@
 6 演示
 
     -- 创建视图
-    create or replace view stu_v_1 as select id,name from mb_mm_student where id <= 10;
+    create or replace view stu_v_1 as select id,name from m_student where id <= 10;
 
     -- 查询视图
     show create view stu_v_1;
@@ -138,7 +138,7 @@
     select * from stu_v_1 where id < 3;
 
     -- 修改视图
-    create or replace view stu_v_1 as select id,name,no from mb_mm_student where id <= 10;
+    create or replace view stu_v_1 as select id,name,no from m_student where id <= 10;
     alter view stu_v_1 as select id,name from student where id <= 10;
 
     -- 删除视图

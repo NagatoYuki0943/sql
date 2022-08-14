@@ -7,7 +7,7 @@
             ...
             )charset utf8mb4;
 
-        create table mb_students6(
+        create table students6(
             id int not null auto_increment primary key,
             name varchar(50) comment '姓名',
             age int comment '年龄',
@@ -18,7 +18,7 @@
         create table 数据库.数据表(
         )
 
-        create table mb.mb_students6(
+        create table mb.students6(
             id int not null auto_increment primary key,
             name varchar(50) comment '姓名',
             age int comment '年龄',
@@ -31,14 +31,14 @@
         Charset:字符集,只对自己当前表有效,级别比数据库高
         Collate:校对集
 
-        create table mb_class(
+        create table class(
             id int not null auto_increment primary key,
             name varchar(10)
         )charset utf8;
 
     (3).复制已有的表结构
         create table 新表 like 旧表; 旧表不仅限于这个数据库,使用其他数据库的表直接使用 . 就可以
-        create table mb_int4 like mb_int3;
+        create table int4 like int3;
 
 2.显示数据表
     显示所有表
@@ -54,7 +54,7 @@
     MySQL中有多种语句结束符
     ;与\g效果一样,都是字段在上排横着,下面跟对应的数据
     \G 字段在左侧竖着,数据在右侧横着
-    show create table mb_int1\G
+    show create table int1\G
 
 4.显示表结构
     describe 表名;

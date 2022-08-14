@@ -6,13 +6,13 @@
 
 2 创建唯一键
     (1) 直接在字段表字段后增加唯一键标识符:unique / unique key
-            create table mb_unique1(
+            create table unique1(
                 id int primary key auto_increment,
                 username varchar(10) unique
             )charset utf8;
 
     (2) 可以再所有字段之后 unique key(字段列表)
-             create table mb_unique2(
+             create table unique2(
                 id int primary key auto_increment,
                 username varchar(10),
                 unique(username) -- key 有没有都可以
@@ -21,25 +21,25 @@
     (3) 创建完之后也可以添加
         alter table 表名 add unique(列名);
         alter table 表名 add unique key(列名);
-                create table mb_unique3(
+                create table unique3(
                     id int primary key auto_increment,
                     username varchar(10)
                 )charset utf8;
 
-            alter table mb_unique3 add unique(username);
+            alter table unique3 add unique(username);
             //可以一次添加多个
-            alter table mb_unique1 add unique(username, pass);
+            alter table unique1 add unique(username, pass);
 
 
 3 查看唯一键
     唯一键是属性,可以通过查看结构查看 允许为空
-    desc mb_unique1;
+    desc unique1;
     | username | varchar(10) | YES  | UNI | NULL    |        |
 
     在不为空的条件下不允许重复
-        insert into mb_unique1 values(null,default);
-        insert into mb_unique1 values(null,default);
-        insert into mb_unique1 values(null,default);
+        insert into unique1 values(null,default);
+        insert into unique1 values(null,default);
+        insert into unique1 values(null,default);
 
         +----+----------+
         | id | username |
@@ -49,8 +49,8 @@
         |  3 | NULL     |
         +----+----------+
 
-        insert into mb_unique1 values(null,'amy');
-        insert into mb_unique1 values(null,'amy');
+        insert into unique1 values(null,'amy');
+        insert into unique1 values(null,'amy');
         第一行成功,第二行失败
         Duplicate entry 'amy' for key 'username'
 
@@ -72,7 +72,7 @@
     基本语法: alter table 表名 drop index 唯一键名字;
     index 关键字:索引,唯一键是索引的一种
 
-    alter table mb_unique2 drop index username; //删除成功
+    alter table unique2 drop index username; //删除成功
     | username | varchar(10) | YES  |     | NULL    |          |
 
 

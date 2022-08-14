@@ -13,13 +13,13 @@ float   单精度 4个字节存储数据,能表示的数据范围比整形大得
         float(M,D) : 表示一共存储M个有效数字,其中小数部分占D位
         float(10,3) : 整数部分7位,小数3位
 
-        create table mb_float1(
+        create table float1(
             f1 float,
             f2 float(10,3)
         )charset utf8;
 
         //正常输入
-        insert into mb_float1 values(10.5424,1234567.123);
+        insert into float1 values(10.5424,1234567.123);
         +---------+-------------+
         | f1      | f2          |
         +---------+-------------+
@@ -27,11 +27,11 @@ float   单精度 4个字节存储数据,能表示的数据范围比整形大得
         +---------+-------------+
 
         //超出位数
-        insert into mb_float1 values(10.5424,12345678910.1547);
+        insert into float1 values(10.5424,12345678910.1547);
         Out of range value for column 'f2' at row 1 //超出指定位数会报错
 
         //超出精度
-        insert into mb_float1 values(10.5424,12345.15474);
+        insert into float1 values(10.5424,12345.15474);
         +---------+-------------+
         | f1      | f2          |
         +---------+-------------+
@@ -39,7 +39,7 @@ float   单精度 4个字节存储数据,能表示的数据范围比整形大得
         | 10.5424 |   12345.155 |   //精度损失了
         +---------+-------------+
 
-        insert into mb_float1 values(10.24,9999999.99);
+        insert into float1 values(10.24,9999999.99);
         +---------+--------------+
         | f1      | f2           |
         +---------+--------------+
@@ -72,15 +72,15 @@ decimal 定点数,系统自动根据存储的数据来分配空间,每9个数据
         decimal(M,D) M总长度,极限65 D小数长度,最长30位
 
 1,创建表与浮点数对比
-    create table mb_decimal1(
+    create table decimal1(
         f1 float(10,2),
         d1 decimal(10,2)
     )charset utf8;
 
 2.正常数据
-    insert into mb_decimal1 values(12345678.90,12345678.90);
+    insert into decimal1 values(12345678.90,12345678.90);
 
-    mysql> select * from mb_decimal1;
+    mysql> select * from decimal1;
     +-------------+-------------+
     | f1          | d1          |
     +-------------+-------------+
@@ -89,9 +89,9 @@ decimal 定点数,系统自动根据存储的数据来分配空间,每9个数据
      f1精度损失了
 
 3.最大数据
-insert into mb_decimal1 values(99999999.99,99999999.99);
+insert into decimal1 values(99999999.99,99999999.99);
 
-    mysql> select * from mb_decimal1;
+    mysql> select * from decimal1;
     +--------------+-------------+
     | f1           | d1          |
     +--------------+-------------+
@@ -101,7 +101,7 @@ insert into mb_decimal1 values(99999999.99,99999999.99);
      前面进位,后面没变化
 
 4.尝试定点数四舍五入
-    insert into mb_decimal1 values(99999999.99,99999999.999);
+    insert into decimal1 values(99999999.99,99999999.999);
     1264 - Out of range value for column 'd1' at row 1
     定点数如果整数部分进位超出长度会报错,不能存进去
 

@@ -14,15 +14,15 @@
 4 执行事务
     将多个连续但是整体的sql指令逐一执行
 
-    insert into mb_int1 values(null,0);
-    insert into mb_int1 values(null,1);
+    insert into int1 values(null,0);
+    insert into int1 values(null,1);
 
     //增加回滚点
     savepoint s1;
 
-    insert into mb_int1 values(null,2);
-    insert into mb_int1 values(null,3);
-    insert into mb_int1 values(null,4);
+    insert into int1 values(null,2);
+    insert into int1 values(null,3);
+    insert into int1 values(null,4);
 
     这时从另一个客户端是看不到这些新数据的
 
@@ -46,15 +46,15 @@
             //开启事务
             start transaction;
 
-            insert into mb_int1 values(null,0);
-            insert into mb_int1 values(null,1);
-            insert into mb_int1 values(null,2);
+            insert into int1 values(null,0);
+            insert into int1 values(null,1);
+            insert into int1 values(null,2);
 
             //增加回滚点
             savepoint s1;
 
             //添加错误数据
-            insert into mb_int1 values(aa,3);
+            insert into int1 values(aa,3);
 
             //回滚到s1
             rollback to s1;

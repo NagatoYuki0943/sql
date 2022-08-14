@@ -20,7 +20,7 @@ MySQL中一共6个属性:null 默认值 列描述 主键 唯一键 自增长
     (1).默认值,字段被设计的时候,允许默认条件下用户不进行数据插入,
         那么可以使用时先准备好的数据来填充:通常填充的是null(上面的图片)
 
-        create table mb_default(
+        create table default(
             name varchar(10) not null, -- 不能为空
             age int default 18         -- 没有数据插入自动18
         )charset utf8;
@@ -33,7 +33,7 @@ MySQL中一共6个属性:null 默认值 列描述 主键 唯一键 自增长
         +-------+-------------+------+-----+---------+-------+
 
         //只插入一个值前面写出相应的列名
-        insert into mb_default(name) values('小明');
+        insert into default(name) values('小明');
 
         +------+-----+
         | name | age |
@@ -43,7 +43,7 @@ MySQL中一共6个属性:null 默认值 列描述 主键 唯一键 自增长
 
     ****(2).default关键字的另一层使用,显示的告知字段使用默认值,****
         在进行数据插入的时候对字段值直接使用default
-        insert into mb_default values('小红',default);
+        insert into default values('小红',default);
 
         +------+-----+
         | name | age |
@@ -58,7 +58,7 @@ MySQL中一共6个属性:null 默认值 列描述 主键 唯一键 自增长
     语法: comment '字段描述';
 
     (1).创建表,增加字段描述
-        create table mb_comment(
+        create table comment(
             name varchar(10) not null comment '当前是用户名,且不为空',
             pass varchar(50) not null comment '密码不能为空'
         )charset utf8;
@@ -72,8 +72,8 @@ MySQL中一共6个属性:null 默认值 列描述 主键 唯一键 自增长
         +-------+-------------+------+-----+---------+-------+
 
     (2).使用表创建语句才能看到
-        show create table mb_comment;
-        | mb_comment | CREATE TABLE `mb_comment` (
+        show create table comment;
+        | comment | CREATE TABLE `comment` (
         `name` varchar(10) NOT NULL COMMENT '当前是用户名,且不为空',
         `pass` varchar(50) NOT NULL COMMENT '密码不能为空'
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8 |

@@ -3,13 +3,13 @@
     基本运算符,进行结果运算 (select字段中)
 
         测试
-        create table mb_ysf1(
+        create table ysf1(
             int_1 int,
             int_2 int,
             int_3 int,
             int_4 int
         )charset utf8;
-        insert into mb_ysf1 values(100,-100,0,default);
+        insert into ysf1 values(100,-100,0,default);
 
         +-------+-------+-------+-------+
         | int_1 | int_2 | int_3 | int_4 |
@@ -19,7 +19,7 @@
 
             //算数运算
             select int_1 + int_2,int_1 - int_2,int_1 * int_2,int_1 / int_2,
-            int_2 / int_3,int_2 % 6,int_4 % 4 from mb_ysf1;
+            int_2 / int_3,int_2 % 6,int_4 % 4 from ysf1;
             +---------------+---------------+---------------+---------------+---------------+-----------+-----------+
             | int_1 + int_2 | int_1 - int_2 | int_1 * int_2 | int_1 / int_2 | int_2 / int_3 | int_2 % 6 | int_4 % 4 |
             +---------------+---------------+---------------+---------------+---------------+-----------+-----------+
@@ -35,7 +35,7 @@
         <> 不等于,相当于 !=
 
         测试
-        mysql> select * from mb_students1 where age>=15;
+        mysql> select * from students1 where age>=15;
         +----+----------+--------+-----+-------+-------+
         | id | name     | sex    | age | class | score |
         +----+----------+--------+-----+-------+-------+
@@ -62,7 +62,7 @@
         是闭区间查找,包括两端,
         条件1必须小于条件2,反过来不可以
 
-            select * from mb_students1 where score between 60 and 100;
+            select * from students1 where score between 60 and 100;
             +----+----------+--------+-----+-------+-------+
             | id | name     | sex    | age | class | score |
             +----+----------+--------+-----+-------+-------+
@@ -77,7 +77,7 @@
     not    !  非
 
         测试
-        select * from mb_students1 where score >= 60 and score <= 100; //和between 60 and 100一样
+        select * from students1 where score >= 60 and score <= 100; //和between 60 and 100一样
         +----+----------+--------+-----+-------+-------+
         | id | name     | sex    | age | class | score |
         +----+----------+--------+-----+-------+-------+
@@ -86,7 +86,7 @@
         |  5 | 周五     | female |  15 |     2 |    88 |
         +----+----------+--------+-----+-------+-------+
 
-        select * from mb_students1 where score < 40 or score > 80;
+        select * from students1 where score < 40 or score > 80;
         +----+----------+---------+-----+-------+-------+
         | id | name     | sex     | age | class | score |
         +----+----------+---------+-----+-------+-------+
@@ -100,7 +100,7 @@
     在什么什么里面,替代=,当结果不是一个值,而是一个结果集的时候
         语法:in(结果1,结果2...)
 
-        select * from mb_students1 where class in (1,2);
+        select * from students1 where class in (1,2);
         +----+------+--------+-----+-------+-------+
         | id | name | sex    | age | class | score |
         +----+------+--------+-----+-------+-------+
@@ -115,7 +115,7 @@
     is是专门判断结果是否为null的运算符
     语法: is null / is not null
 
-        select * from mb_students2 where score is null;
+        select * from students2 where score is null;
         +----+--------+---------+-----+-------+-------+
         | id | name   | sex     | age | class | score |
         +----+--------+---------+-----+-------+-------+
@@ -127,7 +127,7 @@
     语法: like 匹配模式
     匹配模式中有两种占位符 _ 对应位置单个字符 % 匹配多个字符
 
-        select * from mb_students1 where name like '李%';
+        select * from students1 where name like '李%';
         +----+------+------+-----+-------+-------+
         | id | name | sex  | age | class | score |
         +----+------+------+-----+-------+-------+
