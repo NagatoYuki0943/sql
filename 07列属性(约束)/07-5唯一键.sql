@@ -15,13 +15,20 @@
              create table unique2(
                 id int primary key auto_increment,
                 username varchar(10),
-                unique(username) -- key 有没有都可以
+                unique [index_name](username) -- key 有没有都可以
             )charset utf8;
 
     (3) 创建完之后也可以添加
-        --这样添加后的unique名字和列名相同
-        alter table 表名 add unique(列名);
-        alter table 表名 add unique key(列名);
+        create [ unique | fulltext ] index index_name on table_name (column_name,... );
+        create [ unique | fulltext ] index index_name on table_name (column_name(n)); --长度为n的索引
+
+        其他的语法
+        --不写 indexName 添加后的 index_name 名字和列名相同
+        alter table table_name add [ unique | fulltext ] index [ index_name ](column_name,... )
+        alter table table_name add [ unique | fulltext ] index [ index_name ](column_name(n)); --长度为n的索引
+
+        alter table table_name add unique key/index [ index_name ](column_name);  --unique 可以用key或者index
+
 
             create table unique3(
                 id int primary key auto_increment,

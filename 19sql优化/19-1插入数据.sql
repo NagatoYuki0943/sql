@@ -61,11 +61,10 @@
             mysql –-local-infile -u root -p
 
             -- 设置全局参数local_infile为1，开启从本地加载文件导入数据的开关
-            set global local_infile = 1;
+            set global @@local_infile = 1;
 
-        C. load加载数据
-            load data local infile '/root/load_user_100w_sort.sql' into table m_tb_user1
-            fields terminated by ',' lines terminated by '\n' ;
+        C. load加载数据                                                                             --按照 , 分隔字符       按照 换行 分隔行
+            load data local infile './load_user_100w_sort.sql' into table m_tb_user1 fields terminated by ',' lines terminated by '\n' ;
 
         我们看到，插入100w的记录，17s就完成了，性能很好。
 

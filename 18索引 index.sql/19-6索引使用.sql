@@ -113,7 +113,7 @@
         |  1 | SIMPLE      | m_tb_user | NULL       | range | idx_user_pro_age_sta | idx_user_pro_age_sta | 49      | NULL |    2 |    10.00 | Using index condition |
         +----+-------------+-----------+------------+-------+----------------------+----------------------+---------+------+------+----------+-----------------------+
 
-    当范围查询使用> 或 < 时，走联合索引了，但是索引的长度为49，就说明范围查询右边的status字
+    当范围查询使用 > 或 < 时，走联合索引了，但是索引的长度为49，就说明范围查询右边的status字
     段是没有走索引的。
 
 
@@ -244,7 +244,6 @@
             |  1 | SIMPLE      | m_tb_user | NULL       | ALL  | idx_user_phone,phone | NULL | NULL    | NULL |   24 |    19.00 | Using where |
             +----+-------------+-----------+------------+------+----------------------+------+---------+------+------+----------+-------------+
 
-
         由于age没有索引，所以即使id、phone有索引，索引也会失效。所以需要针对于age也要建立索引。
 
         然后，我们可以对age字段建立索引。
@@ -332,7 +331,7 @@
         分析，并不是固定的。
 
 
-5 SQL提示(人为提示sql)
+5 SQL提示(人为提示sql)   use/ignore/force index(index_name)
     恢复上面修改的数据,profession字段全设为null了
     目前m_tb_user表的数据情况如下:
         select * from m_tb_user;
@@ -409,9 +408,9 @@
     那么，我们能不能在查询的时候，自己来指定使用哪个索引呢？ 答案是肯定的，此时就可以借助于
     MySQL的SQL提示来完成。 接下来，介绍一下SQL提示。
 
-    SQL提示，是优化数据库的一个重要手段，简单来说，就是在SQL语句中加入一些人为的提示来达到优
-    化操作的目的。
-        1). use index： 建议MySQL使用哪一个索引完成此次查询（仅仅是建议，mysql内部还会再次进行评估）。
+    SQL提示，是优化数据库的一个重要手段，简单来说，就是在SQL语句中加入一些人为的提示来达到优化操作的目的。
+
+        1). use index(index_name)： 建议MySQL使用哪一个索引完成此次查询（仅仅是建议，mysql内部还会再次进行评估）。
             explain select * from m_tb_user use index(idx_user_pro) where profession = '软件工程';
             +----+-------------+-----------+------------+------+---------------+--------------+---------+-------+------+----------+-------+
             | id | select_type | table     | partitions | type | possible_keys | key          | key_len | ref   | rows | filtered | Extra |
@@ -420,7 +419,7 @@
             +----+-------------+-----------+------------+------+---------------+--------------+---------+-------+------+----------+-------+
 
 
-        2). ignore index： 忽略指定的索引。
+        2). ignore index(index_name)： 忽略指定的索引。
             explain select * from m_tb_user ignore index(idx_user_pro) where profession = '软件工程';
             +----+-------------+-----------+------------+------+----------------------+----------------------+---------+-------+------+----------+-------+
             | id | select_type | table     | partitions | type | possible_keys        | key                  | key_len | ref   | rows | filtered | Extra |
@@ -436,7 +435,7 @@
             +----+-------------+-----------+------------+------+---------------+--------------+---------+-------+------+----------+-------+
 
 
-        3). force index： 强制使用索引。
+        3). force index(index_name)： 强制使用索引。
             explain select * from m_tb_user force index(idx_user_pro) where profession = '软件工程';
             +----+-------------+-----------+------------+------+---------------+--------------+---------+-------+------+----------+-------+
             | id | select_type | table     | partitions | type | possible_keys | key          | key_len | ref   | rows | filtered | Extra |
@@ -627,8 +626,7 @@
 
         create unique index idx_user_phone_name on m_tb_user(phone,name);
 
-    此时，查询时，就走了联合索引，而在联合索引中包含 phone、name的信息，在叶子节点下挂的是对
-    应的主键id，所以查询是无需回表查询的。
+    此时，查询时，就走了联合索引，而在联合索引中包含 phone、name的信息，在叶子节点下挂的是对应的主键id，所以查询是无需回表查询的。
 
         explain select id,name,phone from m_tb_user where phone='17799990010' and name='韩信';                 --使用了phone单列索引 extra中是NULL,使用了回表查询
         +----+-------------+-----------+------------+-------+--------------------------------------------------+----------------+---------+-------+------+----------+-------+

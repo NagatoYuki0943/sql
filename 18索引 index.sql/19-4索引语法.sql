@@ -1,10 +1,13 @@
 1 创建索引
-    create [ unique | fulltext ] index index_name on table_name (index_col_name,... );
+    create [ unique | fulltext ] index index_name on table_name (column_name,... );
+    create [ unique | fulltext ] index index_name on table_name (column_name(n)); --长度为n的索引
 
-    unique其他的语法
-        --这样添加后的unique名字和列名相同
-        alter table table_name add unique(列名);
-        alter table table_name add unique key(列名);
+    其他的语法
+    --不写 indexName 添加后的 index_name 名字和列名相同
+    alter table table_name add [ unique | fulltext ] index [ index_name ](column_name,... )
+    alter table table_name add [ unique | fulltext ] index [ index_name ](column_name(n)); --长度为n的索引
+
+    alter table table_name add unique key/index [ index_name ](column_name);  --unique 可以用key或者index
 
     primary key的写法
         alter table table_name add primary key(列名);
