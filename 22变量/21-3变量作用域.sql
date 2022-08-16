@@ -1,9 +1,39 @@
 1 变量作用于
     变量能够使用的区域范围
 
+
 2 局部作用域
-    使用 declare 关键字声明(在结构体内:函数/存储过程/触发器),而且只能在结构体内使用
-    (1) declare关键字声明的变量没有任何符号修饰,就是普通字符串,如果在外部访问该变量,系统会自动认为是字段
+    作用范围在begin到end语句块之间.在该语句块里设置的变量,declare语句专门用于定义局部变量
+        (1) 局部变量使用declare关键字声明
+        (2) 局部变量declare语句一定出现在begin和end之间(begin end是在大型语句块中使用:函数/存储过程/触发器)
+        (3) 声明语法:declare 变量名 数据类型 [属性]; 属性指的是default等
+
+    1). 声明
+        declare 变量名 变量类型 [default ... ] ;
+        变量类型就是数据库字段类型：INT、BIGINT、CHAR、VARCHAR、DATE、TIME等。
+
+    2). 赋值
+        set 变量名 = 值 ;
+        set 变量名 := 值 ;
+        select 字段名 into 变量名 from 表名 ... ;
+
+    演示示例:
+        -- 声明局部变量 - declare
+        -- 赋值
+        create procedure p2()
+            begin
+                declare stu_count int default 0; --声明局部变量
+                set stu_count := 2;	--两种赋值方式
+                select count(*) into stu_count from students1;
+                select stu_count;
+            end;
+        call p2();
+        +-----------+
+        | stu_count |
+        +-----------+
+        |        49 |
+        +-----------+
+
 
 3 会话作用域
     用户定义的使用 @ 符号定义的变量,使用set关键字

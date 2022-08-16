@@ -41,7 +41,6 @@
                 set @n2 = 'b';
                 set @n3 = 'c';
                 select @n1,@n2,@n3;
-
             end
             $$
 

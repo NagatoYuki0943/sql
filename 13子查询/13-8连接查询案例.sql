@@ -119,7 +119,22 @@
         5 rows in set (0.05 sec)
 
 
-    4). 查询所有年龄大于40岁的员工, 及其归属的部门名称; 如果员工没有分配部门, 也需要展示出
+    4). 查询所有的部门信息, 并统计部门的员工人数  子查询在select中
+        select d.id, d.name, (select count(*) from m_emp e where e.dept_id = d.id) '人数' from m_dept d;
+        +----+--------+------+
+        | id | name   | 人数 |
+        +----+--------+------+
+        |  1 | 研发部 |    5 |
+        |  2 | 市场部 |    4 |
+        |  3 | 财务部 |    3 |
+        |  4 | 销售部 |    3 |
+        |  5 | 总经办 |    1 |
+        |  6 | 人事部 |    0 |
+        +----+--------+------+
+        6 rows in set (0.07 sec)
+
+
+    5). 查询所有年龄大于40岁的员工, 及其归属的部门名称; 如果员工没有分配部门, 也需要展示出
     来(外连接)
     表: emp , dept
     连接条件: m_emp.dept_id = m_dept.id
@@ -140,7 +155,7 @@
         7 rows in set (0.07 sec)
 
 
-    5). 查询所有员工的工资等级
+    6). 查询所有员工的工资等级
     表: emp , salgrade
     连接条件 : m_emp.salary >= m_salgrade.losal and m_emp.salary <= m_salgrade.hisal
 
@@ -193,7 +208,7 @@
         6 rows in set (0.09 sec)
 
 
-    6). 查询 "研发部" 所有员工的信息及 工资等级  同时连接多个表
+    8). 查询 "研发部" 所有员工的信息及 工资等级  同时连接多个表
     表: emp , salgrade , dept
     连接条件 : m_emp.dept_id = m_dept.id, emp.salary between salgrade.losal and salgrade.hisal
     查询条件 : m_dept.name = '研发部'
@@ -212,7 +227,7 @@
         5 rows in set (0.09 sec)
 
 
-    7). 查询 "研发部" 员工的平均工资
+    9). 查询 "研发部" 员工的平均工资
     表: emp , dept
     连接条件 : emp.dept_id = dept.id
 
@@ -226,7 +241,7 @@
         1 row in set (0.19 sec)
 
 
-    8). 查询工资比 "灭绝" 高的员工信息。
+    10). 查询工资比 "灭绝" 高的员工信息。
         ①. 查询 "灭绝" 的薪资
         select salary from m_emp where name = '灭绝';
         ②. 查询比她工资高的员工数据
@@ -245,7 +260,7 @@
         7 rows in set (0.07 sec)
 
 
-    9). 查询比平均薪资高的员工信息
+    11). 查询比平均薪资高的员工信息
         ①. 查询员工的平均薪资
         select avg(salary) from m_emp;
         ②. 查询比平均薪资高的员工信息
@@ -263,7 +278,7 @@
         6 rows in set (0.06 sec)
 
 
-    10). 查询低于本部门平均工资的员工信息    内连接,自己连接自己
+    12). 查询低于本部门平均工资的员工信息    内连接,自己连接自己
         ①. 查询指定部门平均薪资
         select avg(e1.salary) from m_emp e1 where e1.dept_id = 1;
         select avg(e1.salary) from m_emp e1 where e1.dept_id = 2;
@@ -285,22 +300,7 @@
         9 rows in set (0.04 sec)
 
 
-    11). 查询所有的部门信息, 并统计部门的员工人数  子查询在select中
-        select d.id, d.name , ( select count(*) from m_emp e where e.dept_id = d.id ) '人数' from m_dept d;
-        +----+--------+------+
-        | id | name   | 人数 |
-        +----+--------+------+
-        |  1 | 研发部 |    5 |
-        |  2 | 市场部 |    4 |
-        |  3 | 财务部 |    3 |
-        |  4 | 销售部 |    3 |
-        |  5 | 总经办 |    1 |
-        |  6 | 人事部 |    0 |
-        +----+--------+------+
-        6 rows in set (0.07 sec)
-
-
-    12). 查询与 "鹿杖客" , "宋远桥" 的职位和薪资相同的员工信息
+    13). 查询与 "鹿杖客" , "宋远桥" 的职位和薪资相同的员工信息
         分解为两步执行:
         ①. 查询 "鹿杖客" , "宋远桥" 的职位和薪资
             select job, salary from m_emp where name = '鹿杖客' or name = '宋远桥';
@@ -323,7 +323,7 @@
             +----+--------+-----+------+--------+------------+-----------+---------+
 
 
-    13). 查询所有学生的选课情况, 展示出学生名称, 学号, 课程名称   多对多中间表查询
+    14). 查询所有学生的选课情况, 展示出学生名称, 学号, 课程名称   多对多中间表查询
     表: student , course , student_course
     连接条件: m_student.id = m_student_course.studentid , m_course.id = m_student_course.courseid
 
@@ -341,7 +341,7 @@
         6 rows in set (0.05 sec)
 
 
-    13). 查询选修了mysql的学生信息
+    15). 查询选修了mysql的学生信息
     表: student , course , student_course
         select * from m_student where id in
             (select studentid from m_student_course where courseid = (select id from m_course where name='mysql'));
@@ -356,7 +356,7 @@
         2 rows in set (0.06 sec)
 
 
-    14). 查询id和name为something的同学信息
+    16). 查询id和name为something的同学信息
         select * from students1 where (id,name)=(select id,name from students1 order by score desc limit 1);
             +-----+----------+--------+-----+-------+-------+
         | id  | name     | sex    | age | class | score |

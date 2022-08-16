@@ -4,20 +4,23 @@
         begin
             -- SQL语句
         end;
-        结束符
 
-        注意: (1) 如果过程体重只有一条指令,那么可以省略 begin 和 end
-              (2) 过程基本上可以完成函数的功能
+
+        注意:
+            (1) 如果过程体重只有一条指令,那么可以省略 begin 和 end
+            (2) 过程基本上可以完成函数的功能
 
             测试:
-                create procedure pro1()
-                select * from students1;
+                create procedure p1()
+                begin
+                    select * from students1;
+                end;
 
 
 
-                创建复杂过程
+                创建复杂过程  设置分隔符是因为terminal中中间使用 ; 会报错,可以使用其他的高级方式创建
                 delimiter $$    --将 $$ 设置为结束符
-                create procedure pro2()
+                create procedure p2()
                 begin
                     -- 求1到100之间的和
                     declare i int default 1;
@@ -38,16 +41,22 @@
 
 
 2 查看过程
-    查看过程和查看函数完全一样,除了关键字
+    查看指定数据库的存储过程
+    select * from information_schema.routines where routine_schema = 'xxx'; -- 查询指定数据库的存储过程及状态信息
+
+        select * from information_schema.routines where routine_schema = 'mb';
+
+
     查看全部存储过程: show procedure status [like 'pattern'];
 
         show procedure status;
         ...
         27 rows in set (0.73 sec)
 
+
     查看过程创建语句: show create procedure 存储过程名称;
 
-        show create procedure pro1;
+        show create procedure p1;
         +-----------+-----------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------+----------------------+----------------------+--------------------+
         | Procedure | sql_mode                                                                                                              | Create Procedure                                                                  | character_set_client | collation_connection | Database Collation |
         +-----------+-----------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------+----------------------+----------------------+--------------------+
@@ -60,7 +69,7 @@
     过程没有返回值,select不能使用
     过程有专用语法: call 过程名([实参列表])
 
-        call pro1;
+        call p1();
         +----+----------+---------+-----+-------+-------+
         | id | name     | sex     | age | class | score |
         +----+----------+---------+-----+-------+-------+
@@ -75,7 +84,7 @@
 4 删除过程
     drop procedure 过程名;
 
-        drop procedure pro1;
+        drop procedure p1;
         Query OK, 0 rows affected (0.31 sec)
 
 5 修改

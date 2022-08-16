@@ -10,26 +10,40 @@
         show variables;
         547 rows in set (0.52 sec)
 
+        show session variables like 'auto%';
+        +--------------------------+-------+
+        | Variable_name            | Value |
+        +--------------------------+-------+
+        | auto_generate_certs      | ON    |
+        | auto_increment_increment | 1     |
+        | auto_increment_offset    | 1     |
+        | autocommit               | ON    |
+        | automatic_sp_privileges  | ON    |
+        +--------------------------+-------+
+
+        show global variables like 'auto%';
+        +--------------------------+-------+
+        | Variable_name            | Value |
+        +--------------------------+-------+
+        | auto_generate_certs      | ON    |
+        | auto_increment_increment | 1     |
+        | auto_increment_offset    | 1     |
+        | autocommit               | ON    |
+        | automatic_sp_privileges  | ON    |
+        +--------------------------+-------+
+
 
 3 查询系统变量
     MySQL允许用户使用select查询变量的数据值(系统变量)
     基本语法:
-        select @@ [session | global] 变量名;
+        select @@ [session | global].变量名;
 
-            测试:
-            show variables like 'autocommit';
-            +---------------+-------+
-            | Variable_name | Value |
-            +---------------+-------+
-            | autocommit    | ON    |
-            +---------------+-------+
-            //下面是真是的值
-            select @@autocommit;
-            +--------------+
-            | @@autocommit |
-            +--------------+
-            |            1 |
-            +--------------+
+        select @@autocommit;
+        +--------------+
+        | @@autocommit |
+        +--------------+
+        |            1 |
+        +--------------+
 
 
 4 修改系统变量
@@ -42,7 +56,20 @@
         set 变量名 = 新值;
 
             测试:
-            set autocommit=0; //关闭autocommit,只对自己有效,在另一个客户端还是1
+            set autocommit=0;     --关闭autocommit,只对自己有效,在另一个客户端还是1
+            select @@session.autocommit;
+            +----------------------+
+            | @@session.autocommit |
+            +----------------------+
+            |                    0 |
+            +----------------------+
+
+            select @@global.autocommit;
+            +---------------------+
+            | @@global.autocommit |
+            +---------------------+
+            |                   1 |
+            +---------------------+
 
 
     (2) 全局修改,针对所有客户端,"所有时刻"都有效
@@ -53,3 +80,5 @@
             set @@global.auto_increment_increment = 2
             修改后查看后没发现修改,全局修改只针对新客户端生效,正在连着的无效
             如果想要本次连接对应的变量修改有效,不能使用全局修改,只能使用会话级别修改(set 变量名 = 新值)
+
+        服务器重启后会重置,要修改配置文件才永久生效
