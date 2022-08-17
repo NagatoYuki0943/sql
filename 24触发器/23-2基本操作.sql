@@ -105,7 +105,7 @@
         show triggers;
         -- 更新
         update m_tb_user set profession = '会计' where id = 23;
-        update m_tb_user set profession = '会计' where id <= 5;
+        update m_tb_user set profession = '会计' where id <= 5; -- 一次更改多条数据,会触发多个触发器
         测试完毕之后，检查日志表中的数据是否可以正常插入，以及插入数据的正确性。
 
         drop trigger m_tb_user_update_trigger;
