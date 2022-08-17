@@ -17,7 +17,7 @@
 
 
 2 案例
-    根据传入的参数uage，来查询用户表tb_user中，所有的用户年龄小于等于uage的用户姓名
+    根据传入的参数uage，来查询用户表m_tb_user中，所有的用户年龄小于等于uage的用户姓名
     （name）和专业（profession），并将用户的姓名和专业插入到所创建的一张新表
     (id,name,profession)中。
 
@@ -31,27 +31,29 @@
     create procedure p11(in uage int)
     begin
         declare uname varchar(100);
-        declare upro varchar(100);
-        declare u_cursor cursor for select name,profession from tb_user where age <= uage;
-        drop table if exists tb_user_pro;
-        create table if not exists tb_user_pro(
+        declare uprofession varchar(100);
+        declare u_cursor cursor for select name,profession from m_tb_user where age <= uage;    -- A. 声明游标, 存储查询结果集 (游标声明在变量后面)
+        drop table if exists m_tb_user_pro; -- B. 准备: 创建表结构
+        create table if not exists m_tb_user_pro(
             id int primary key auto_increment,
             name varchar(100),
             profession varchar(100)
         );
-        open u_cursor;
+        open u_cursor;  -- C. 开启游标
         while true do
-            fetch u_cursor into uname,upro;
-            insert into tb_user_pro values (null, uname, upro);
+            fetch u_cursor into uname, uprofession; -- D. 获取游标中的记录
+            insert into m_tb_user_pro values (null, uname, uprofession);   -- E. 插入数据到新表中
         end while;
-        close u_cursor;
+        close u_cursor; -- 关闭游标
     end;
 
     call p11(30);
 
+    drop procedure p11;
+
     上述的存储过程，最终我们在调用的过程中，会报错，之所以报错是因为上面的while循环中，并没有
     退出条件。当游标的数据集获取完毕之后，再次获取数据，就会报错，从而终止了程序的执行。
-    但是此时，tb_user_pro表结构及其数据都已经插入成功了，我们可以直接刷新表结构，检查表结构
+    但是此时，m_tb_user_pro表结构及其数据都已经插入成功了，我们可以直接刷新表结构，检查表结构
     中的数据。
     上述的功能，虽然我们实现了，但是逻辑并不完善，而且程序执行完毕，获取不到数据，数据库还报
     错。 接下来，我们就需要来完成这个存储过程，并且解决这个问题。

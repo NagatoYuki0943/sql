@@ -22,7 +22,7 @@
     计算从1累加到n的值，n为传入的参数值。
 
     create function fun1(n int)
-    returns int deterministic
+    returns int deterministic -- 返回值
     begin
         declare total int default 0;
         while n>0 do
@@ -33,3 +33,8 @@
     end;
 
     select fun1(50);
+    +----------+
+    | fun1(50) |
+    +----------+
+    |     1275 |
+    +----------+

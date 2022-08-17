@@ -11,8 +11,8 @@
     insert: 插入前全为空,没有 old
     delete: 清空,没有 new
 
-2 商品自动扣除库存
 
+2 商品自动扣除库存
 
         delimiter $$  //这一行单独执行
 

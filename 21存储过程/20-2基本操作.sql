@@ -19,7 +19,7 @@
 
 
                 创建复杂过程  设置分隔符是因为terminal中中间使用 ; 会报错,可以使用其他的高级方式创建
-                delimiter $$    --将 $$ 设置为结束符
+                delimiter $$    -- 将 $$ 设置为结束符
                 create procedure p2()
                 begin
                     -- 求1到100之间的和
@@ -37,7 +37,7 @@
                     select @sum;
                 end
                 &&
-                delimiter ;    --将 ; 设置为结束符
+                delimiter ;    -- 将 ; 设置为结束符
 
 
 2 查看过程
@@ -81,11 +81,13 @@
         | 26 | 曹二十六 | female  |  15 |     5 |    55 |
         +----+----------+---------+-----+-------+-------+
 
+
 4 删除过程
     drop procedure 过程名;
 
         drop procedure p1;
         Query OK, 0 rows affected (0.31 sec)
+
 
 5 修改
     没法修改,只能先删除再创建

@@ -1,15 +1,15 @@
 1 介绍
     LOOP 实现简单的循环，如果不在SQL逻辑中增加退出循环的条件，可以用其来实现简单的死循环。
     LOOP可以配合一下两个语句使用：
-        LEAVE ：配合循环使用，退出循环。
-        ITERATE：必须用在循环中，作用是跳过当前循环剩下的语句，直接进入下一次循环。
+        leave ：配合循环使用，退出循环。
+        iterate：必须用在循环中，作用是跳过当前循环剩下的语句，直接进入下一次循环。
 
     [begin_label:] LOOP
     SQL逻辑...
     END LOOP [end_label];
 
-    LEAVE label; -- 退出指定标记的循环体
-    ITERATE label; -- 直接进入下一次循环
+    leave label; -- 退出指定标记的循环体
+    iterate label; -- 直接进入下一次循环
 
     上述语法中出现的 begin_label，end_label，label 指的都是我们所自定义的标记。
 
@@ -24,7 +24,7 @@
     begin
         declare total int default 0;
         sum:loop
-            if n<=0 then
+            if n<=0 then    -- <0时退出
                 leave sum;
             end if;
 
@@ -36,6 +36,13 @@
     end;
 
     call p9(100);
+    +-------+
+    | total |
+    +-------+
+    |  5050 |
+    +-------+
+
+    drop procedure p9;
 
 
     2) 案例二
@@ -52,7 +59,7 @@
                 leave sum;
             end if;
 
-            if n%2 = 1 then
+            if n%2 = 1 then -- 跳过当次循环
                 set n := n - 1;
                 iterate sum;
             end if;
@@ -64,3 +71,10 @@
     end;
 
     call p10(100);
+
+    drop procedure p10;
+    +-------+
+    | total |
+    +-------+
+    |  2550 |
+    +-------+

@@ -34,9 +34,15 @@
         end;
 
         -- 定义用户变量 @result来接收返回的数据, 用户变量可以不用声明
-        call p4(18, @result);
-
+        call p4(80, @result);
         select @result;
+        +---------+
+        | @result |
+        +---------+
+        | 及格    |
+        +---------+
+
+    drop procedure p4;
 
 
     2) 案例二
@@ -45,8 +51,14 @@
         begin
             set score := score * 0.5;
         end;
-        set @score = 198;
+        set @score := 198;
         call p5(@score);
 
         select @score;
+        +--------+
+        | @score |
+        +--------+
+        |     99 |
+        +--------+
 
+    drop procedure p5;
