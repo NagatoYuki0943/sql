@@ -234,6 +234,8 @@
 
         查询选修了mysql的学生信息
         表: student , course , student_course
+            select s.* from m_student s,m_course c,m_student_course sc
+                where s.id=sc.studentid and c.id=sc.courseid and c.name='mysql';
             select * from m_student where id in
                 (select studentid from m_student_course where courseid = (select id from m_course where name='mysql'));
             select s.* from m_student s,m_student_course sc
@@ -245,6 +247,16 @@
             |  2 | 谢逊   | 2000100102 |
             +----+--------+------------+
 
+            explain select s.* from m_student s,m_course c,m_student_course sc
+                where s.id=sc.studentid and c.id=sc.courseid and c.name='mysql';
+            +----+-------------+-------+------------+--------+--------------------------+-------------+---------+-----------------+------+----------+-------------+
+            | id | select_type | table | partitions | type   | possible_keys            | key         | key_len | ref             | rows | filtered | Extra       |
+            +----+-------------+-------+------------+--------+--------------------------+-------------+---------+-----------------+------+----------+-------------+
+            |  1 | SIMPLE      | c     | NULL       | ALL    | PRIMARY                  | NULL        | NULL    | NULL            |    4 |    25.00 | Using where |
+            |  1 | SIMPLE      | sc    | NULL       | ref    | fk_courseid,fk_studentid | fk_courseid | 4       | mb.c.id         |    1 |   100.00 | NULL        |
+            |  1 | SIMPLE      | s     | NULL       | eq_ref | PRIMARY                  | PRIMARY     | 4       | mb.sc.studentid |    1 |   100.00 | NULL        |
+            +----+-------------+-------+------------+--------+--------------------------+-------------+---------+-----------------+------+----------+-------------+
+
             explain select * from m_student where id in
                 (select studentid from m_student_course where courseid = (select id from m_course where name='mysql'));
             +----+--------------+------------------+------------+--------+--------------------------+-------------+---------+-----------------------+------+----------+-------------+
@@ -255,7 +267,6 @@
             |  2 | MATERIALIZED | m_student_course | NULL       | ref    | fk_courseid,fk_studentid | fk_courseid | 4       | const                 |    2 |   100.00 | Using where |
             |  3 | SUBQUERY     | m_course         | NULL       | ALL    | NULL                     | NULL        | NULL    | NULL                  |    4 |    25.00 | Using where |
             +----+--------------+------------------+------------+--------+--------------------------+-------------+---------+-----------------------+------+----------+-------------+
-            4 rows in set (0.05 sec)
 
             explain select s.* from m_student s,m_student_course sc
                     where (s.id=sc.studentid) and sc.courseid=(select id from m_course c where c.name ='mysql');
@@ -266,7 +277,6 @@
             |  1 | PRIMARY     | s     | NULL       | eq_ref | PRIMARY                  | PRIMARY     | 4       | mb.sc.studentid |    1 |   100.00 | NULL        |
             |  2 | SUBQUERY    | c     | NULL       | ALL    | NULL                     | NULL        | NULL    | NULL            |    4 |    25.00 | Using where |
             +----+-------------+-------+------------+--------+--------------------------+-------------+---------+-----------------+------+----------+-------------+
-            3 rows in set (0.02 sec)
 
 
         type示例

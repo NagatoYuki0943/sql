@@ -5,15 +5,15 @@
     其典型的使用场景是做全库的逻辑备份，对所有的表进行锁定，从而获取一致性视图，保证数据的完整
     性。
 
-    为什么全库逻辑备份，就需要加全就锁呢？
+    为什么全库逻辑备份，就需要加全就锁呢？ (PDF)
 
     A. 我们一起先来分析一下不加全局锁，可能存在的问题。
         假设在数据库中存在这样三张表: tb_stock 库存表，tb_order 订单表，tb_orderlog 订单日志表。
-        - 在进行数据备份时，先备份了tb_stock库存表。
-        - 然后接下来，在业务系统中，执行了下单操作，扣减库存，生成订单（更新tb_stock表，插入tb_order表）。
-        - 然后再执行备份 tb_order表的逻辑。
-        - 业务中执行插入订单日志操作。
-        - 最后，又备份了tb_orderlog表。
+            - 在进行数据备份时，先备份了tb_stock库存表。
+            - 然后接下来，在业务系统中，执行了下单操作，扣减库存，生成订单（更新tb_stock表，插入tb_order表）。
+            - 然后再执行备份 tb_order表的逻辑。
+            - 业务中执行插入订单日志操作。
+            - 最后，又备份了tb_orderlog表。
 
         此时备份出来的数据，是存在问题的。因为备份出来的数据，tb_stock表与tb_order表的数据不一
         致(有最新操作的订单信息,但是库存数没减)。
@@ -28,15 +28,21 @@
 
 2 语法
     1). 加全局锁
-        flush tables with read lock ;
+        flush tables with read lock;
+        Query OK, 0 rows affected (0.00 sec)
+
+        这时在另一个终端操作
+        update user set name='ccc' where id=243;
+        会一直卡住
 
     2). 数据备份
-        mysqldump -uroot –p1234 itcast > itcast.sql
+        -- 这个命令不要在sql中运行,要在系统终端中运行
+        mysqldump -uroot –proot mb > mb.sql;
 
     数据备份的相关指令, 在后面MySQL管理章节, 还会详细讲解.
 
     3). 释放锁
-        unlock tables ;
+        unlock tables;
 
 
 3 特点

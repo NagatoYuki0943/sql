@@ -3,13 +3,13 @@
     不用管 @@autocommit 是0还是1
 
 2 命令
-    (1) start transaction;  //开启事务,从这条语句开始,后面的所有语句都不会直接写入到
+    (1) start transaction / begin;  //开启事务,从这条语句开始,后面的所有语句都不会直接写入到
         数据表(保存在事务日志中)
     (2) 事务处理:多个写指令构成;
     (3) 事务提交:   commit/rollback,直到这个时候,这个事务才算结束
 
 3 开启事务
-    start transaction;
+    start transaction; / begin;
 
 4 执行事务
     将多个连续但是整体的sql指令逐一执行

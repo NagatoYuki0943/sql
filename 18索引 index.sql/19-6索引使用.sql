@@ -91,7 +91,6 @@
     件。但是查询时，跳过了age这个列，所以后面的列索引是不会使用的，也就是索引部分生效，所以索
     引的长度就是47。
 
-
     思考题：
         当执行SQL语句: explain select * from m_tb_user where age = 31 and
         status = '0' and profession = '软件工程'； 时，是否满足最左前缀法则，走不走

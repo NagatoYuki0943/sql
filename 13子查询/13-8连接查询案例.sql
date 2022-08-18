@@ -343,6 +343,8 @@
 
     15). 查询选修了mysql的学生信息
     表: student , course , student_course
+        select s.* from m_student s,m_course c,m_student_course sc
+            where s.id=sc.studentid and c.id=sc.courseid and c.name='mysql';
         select * from m_student where id in
             (select studentid from m_student_course where courseid = (select id from m_course where name='mysql'));
         select s.* from m_student s,m_student_course sc
