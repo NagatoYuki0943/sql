@@ -34,7 +34,7 @@
             SELECT ... FOR UPDATE              排他锁       需要手动在SELECT之后加FOR UPDATE
 
     2). 演示
-        默认情况下，InnoDB在 REPEATABLE READ事务隔离级别运行，InnoDB使用 next-key 锁进行搜
+        默认情况下，InnoDB在 REPEATABLE READ 事务隔离级别运行，InnoDB使用 next-key 锁进行搜
         索和索引扫描，以防止幻读。
             - 针对唯一索引进行检索时，对已存在的记录进行等值匹配时，将会自动优化为行锁。
             - InnoDB的行锁是针对于索引加的锁，不通过索引条件检索数据，那么InnoDB将对表中的所有记录加锁，此时 就会升级为表锁。
@@ -56,196 +56,196 @@
             INSERT INTO `m_stu` VALUES (19, 'lily', 19);
             INSERT INTO `m_stu` VALUES (25, 'luci', 25);
 
-                select * from m_stu;
-                +----+-------+-----+
-                | id | name  | age |
-                +----+-------+-----+
-                |  1 | tom   |   1 |
-                |  3 | cat   |   3 |
-                |  8 | rose  |   8 |
-                | 11 | jetty |  11 |
-                | 19 | lily  |  19 |
-                | 25 | luci  |  25 |
-                +----+-------+-----+
-                6 rows in set (0.00 sec)
+            select * from m_stu;
+            +----+-------+-----+
+            | id | name  | age |
+            +----+-------+-----+
+            |  1 | tom   |   1 |
+            |  3 | cat   |   3 |
+            |  8 | rose  |   8 |
+            | 11 | jetty |  11 |
+            | 19 | lily  |  19 |
+            | 25 | luci  |  25 |
+            +----+-------+-----+
+            6 rows in set (0.00 sec)
 
-                show index from m_stu;
-                +-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+
-                | Table | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible |
-                +-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+
-                | m_stu |          0 | PRIMARY  |            1 | id          | A         |           6 |     NULL |   NULL |      | BTREE      |         |               | YES     |
-                +-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+
-
-
-            演示行锁的时候，我们就通过上面这张表来演示一下。
-            A. 普通的select语句，执行时，不会加锁。
-            左侧:
-                begin;
-                select * from m_stu where id=1;
-                +----+------+-----+
-                | id | name | age |
-                +----+------+-----+
-                |  1 | tom  |   1 |
-                +----+------+-----+
-
-                commit;
-
-            右侧:
-                begin;
-                select object_schema,object_name,index_name,lock_type,lock_mode,lock_data from performance_schema.data_locks;
-                Empty set (0.38 sec)    --没有锁
-
-                select * from m_stu where id=1;
-                +----+------+-----+
-                | id | name | age |
-                +----+------+-----+
-                |  1 | tom  |   1 |
-                +----+------+-----+
-
-                commit;
+            show index from m_stu;
+            +-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+
+            | Table | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible |
+            +-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+
+            | m_stu |          0 | PRIMARY  |            1 | id          | A         |           6 |     NULL |   NULL |      | BTREE      |         |               | YES     |
+            +-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+
 
 
-            B. select...lock in share mode，加共享锁，共享锁与共享锁之间兼容。
+        演示行锁的时候，我们就通过上面这张表来演示一下。
+        A. 普通的select语句，执行时，不会加锁。
+        左侧:
+            begin;
+            select * from m_stu where id=1;
+            +----+------+-----+
+            | id | name | age |
+            +----+------+-----+
+            |  1 | tom  |   1 |
+            +----+------+-----+
 
-                共享锁与排他锁之间互斥。
+            commit;
 
-                客户端一获取的是id为1这行的共享锁，客户端二是可以获取id为3这行的排它锁的，因为不是同一行
-                数据。 而如果客户端二想获取id为1这行的排他锁，会处于阻塞状态，以为共享锁与排他锁之间互斥。
+        右侧:
+            begin;
+            select object_schema,object_name,index_name,lock_type,lock_mode,lock_data from performance_schema.data_locks;
+            Empty set (0.38 sec)    --没有锁
 
-            左侧:
-                begin
-                select * from m_stu where id=1 lock in share mode;  -- 加共享锁
-                +----+------+-----+
-                | id | name | age |
-                +----+------+-----+
-                |  1 | tom  |   1 |
-                +----+------+-----+
-                commit;
+            select * from m_stu where id=1;
+            +----+------+-----+
+            | id | name | age |
+            +----+------+-----+
+            |  1 | tom  |   1 |
+            +----+------+-----+
 
-            右侧:
-                select object_schema,object_name,index_name,lock_type,lock_mode,lock_data from performance_schema.data_locks;
-                +---------------+-------------+------------+-----------+-----------+-----------+
-                | object_schema | object_name | index_name | lock_type | lock_mode | lock_data |
-                +---------------+-------------+------------+-----------+-----------+-----------+
-                | mb            | m_stu       | NULL       | TABLE     | IS        | NULL      |
-                | mb            | m_stu       | PRIMARY    | RECORD    | S         | 1         |  -- S 共享锁
-                +---------------+-------------+------------+-----------+-----------+-----------+
-
-                begin;
-                select * from m_stu where id=1 lock in share mode;  -- 也加共享锁,不冲突
-                +----+------+-----+
-                | id | name | age |
-                +----+------+-----+
-                |  1 | tom  |   1 |
-                +----+------+-----+
-
-                select object_schema,object_name,index_name,lock_type,lock_mode,lock_data from performance_schema.data_locks;
-                +---------------+-------------+------------+-----------+-----------+-----------+
-                | object_schema | object_name | index_name | lock_type | lock_mode | lock_data |
-                +---------------+-------------+------------+-----------+-----------+-----------+
-                | mb            | m_stu       | NULL       | TABLE     | IS        | NULL      |
-                | mb            | m_stu       | PRIMARY    | RECORD    | S         | 1         |
-                | mb            | m_stu       | NULL       | TABLE     | IS        | NULL      |
-                | mb            | m_stu       | PRIMARY    | RECORD    | S         | 1         |
-                +---------------+-------------+------------+-----------+-----------+-----------+
-
-                commit;
-                Query OK, 0 rows affected (0.00 sec)
-
-                select object_schema,object_name,index_name,lock_type,lock_mode,lock_data from performance_schema.data_locks;   -- 提交之后自己的锁就没了
-                +---------------+-------------+------------+-----------+-----------+-----------+
-                | object_schema | object_name | index_name | lock_type | lock_mode | lock_data |
-                +---------------+-------------+------------+-----------+-----------+-----------+
-                | mb            | m_stu       | NULL       | TABLE     | IS        | NULL      |
-                | mb            | m_stu       | PRIMARY    | RECORD    | S         | 1         |
-                +---------------+-------------+------------+-----------+-----------+-----------+
-
-                begin;
-                update m_stu set name='Java' where id=1;  --卡住,排他锁和共享锁互斥
-                commit;
+            commit;
 
 
-            C. 排它锁与排他锁之间互斥
-                当客户端一，执行update语句，会为id为1的记录加排他锁； 客户端二，如果也执行update语句更
-                新id为1的数据，也要为id为1的数据加排他锁，但是客户端二会处于阻塞状态，因为排他锁之间是互
-                斥的。 直到客户端一，把事务提交了，才会把这一行的行锁释放，此时客户端二，解除阻塞。
-            左侧:
-                begin;
+        B. select...lock in share mode，加共享锁，共享锁与共享锁之间兼容。
 
-                update m_stu set name='Java' where id=1;
-                Query OK, 1 row affected (0.00 sec)
-                Rows matched: 1  Changed: 1  Warnings: 0
+            共享锁与排他锁之间互斥。
 
-                commit;
+            客户端一获取的是id为1这行的共享锁，客户端二是可以获取id为3这行的排它锁的，因为不是同一行
+            数据。 而如果客户端二想获取id为1这行的排他锁，会处于阻塞状态，以为共享锁与排他锁之间互斥。
 
-            右侧:
-                begin;
+        左侧:
+            begin
+            select * from m_stu where id=1 lock in share mode;  -- 加共享锁
+            +----+------+-----+
+            | id | name | age |
+            +----+------+-----+
+            |  1 | tom  |   1 |
+            +----+------+-----+
+            commit;
 
-                update m_stu set name='Java' where id=1; --卡住
-                Query OK, 0 rows affected (48.92 sec)    -- 左侧提交才会插入
-                Rows matched: 1  Changed: 0  Warnings: 0
+        右侧:
+            select object_schema,object_name,index_name,lock_type,lock_mode,lock_data from performance_schema.data_locks;
+            +---------------+-------------+------------+-----------+-----------+-----------+
+            | object_schema | object_name | index_name | lock_type | lock_mode | lock_data |
+            +---------------+-------------+------------+-----------+-----------+-----------+
+            | mb            | m_stu       | NULL       | TABLE     | IS        | NULL      |
+            | mb            | m_stu       | PRIMARY    | RECORD    | S         | 1         |  -- S 共享锁
+            +---------------+-------------+------------+-----------+-----------+-----------+
 
-                commit;
+            begin;
+            select * from m_stu where id=1 lock in share mode;  -- 也加共享锁,不冲突
+            +----+------+-----+
+            | id | name | age |
+            +----+------+-----+
+            |  1 | tom  |   1 |
+            +----+------+-----+
+
+            select object_schema,object_name,index_name,lock_type,lock_mode,lock_data from performance_schema.data_locks;
+            +---------------+-------------+------------+-----------+-----------+-----------+
+            | object_schema | object_name | index_name | lock_type | lock_mode | lock_data |
+            +---------------+-------------+------------+-----------+-----------+-----------+
+            | mb            | m_stu       | NULL       | TABLE     | IS        | NULL      |
+            | mb            | m_stu       | PRIMARY    | RECORD    | S         | 1         |
+            | mb            | m_stu       | NULL       | TABLE     | IS        | NULL      |
+            | mb            | m_stu       | PRIMARY    | RECORD    | S         | 1         |
+            +---------------+-------------+------------+-----------+-----------+-----------+
+
+            commit;
+            Query OK, 0 rows affected (0.00 sec)
+
+            select object_schema,object_name,index_name,lock_type,lock_mode,lock_data from performance_schema.data_locks;   -- 提交之后自己的锁就没了
+            +---------------+-------------+------------+-----------+-----------+-----------+
+            | object_schema | object_name | index_name | lock_type | lock_mode | lock_data |
+            +---------------+-------------+------------+-----------+-----------+-----------+
+            | mb            | m_stu       | NULL       | TABLE     | IS        | NULL      |
+            | mb            | m_stu       | PRIMARY    | RECORD    | S         | 1         |
+            +---------------+-------------+------------+-----------+-----------+-----------+
+
+            begin;
+            update m_stu set name='Java' where id=1;  --卡住,排他锁和共享锁互斥
+            commit;
 
 
-            D. 无索引行锁升级为表锁
-                m_stu表中数据如下:
-                我们在两个客户端中执行如下操作:
+        C. 排它锁与排他锁之间互斥
+            当客户端一，执行update语句，会为id为1的记录加排他锁； 客户端二，如果也执行update语句更
+            新id为1的数据，也要为id为1的数据加排他锁，但是客户端二会处于阻塞状态，因为排他锁之间是互
+            斥的。 直到客户端一，把事务提交了，才会把这一行的行锁释放，此时客户端二，解除阻塞。
+        左侧:
+            begin;
 
-                在客户端一中，开启事务，并执行update语句，更新name为Lily的数据，也就是id为19的记录 。
-                然后在客户端二中更新id为3的记录，却不能直接执行，会处于阻塞状态，为什么呢？
+            update m_stu set name='Java' where id=1;
+            Query OK, 1 row affected (0.00 sec)
+            Rows matched: 1  Changed: 1  Warnings: 0
 
-                原因就是因为此时，客户端一，根据name字段进行更新时，name字段是没有索引的，如果没有索引，
-                此时行锁会升级为表锁(因为行锁是对索引项加的锁，而name没有索引)。
+            commit;
 
-                接下来，我们再针对name字段建立索引，索引建立之后，再次做一个测试：
+        右侧:
+            begin;
 
-                此时我们可以看到，客户端一，开启事务，然后依然是根据name进行更新。而客户端二，在更新id为3
-                的数据时，更新成功，并未进入阻塞状态。 这样就说明，我们根据索引字段进行更新操作，就可以避
-                免行锁升级为表锁的情况。
+            update m_stu set name='Java' where id=1; --卡住
+            Query OK, 0 rows affected (48.92 sec)    -- 左侧提交才会插入
+            Rows matched: 1  Changed: 0  Warnings: 0
 
-            左侧:
-                begin;
+            commit;
 
-                mysql> update m_stu set name='Lei' where name='lily';
-                Query OK, 1 row affected (0.32 sec)
-                Rows matched: 1  Changed: 1  Warnings: 0
 
-                commit;
+        D. 无索引行锁升级为表锁
+            m_stu表中数据如下:
+            我们在两个客户端中执行如下操作:
 
-            右侧:
-                begin;
+            在客户端一中，开启事务，并执行update语句，更新name为Lily的数据，也就是id为19的记录 。
+            然后在客户端二中更新id为3的记录，却不能直接执行，会处于阻塞状态，为什么呢？
 
-                update m_stu set name='PHP' where id=3;   -- 卡住,根据name字段进行更新时，name字段是没有索引的，如果没有索引，此时行锁会升级为表锁
-                Query OK, 1 row affected (1 min 5.44 sec) -- 左侧提交才会插入
-                Rows matched: 1  Changed: 1  Warnings: 0
+            原因就是因为此时，客户端一，根据name字段进行更新时，name字段是没有索引的，如果没有索引，
+            此时行锁会升级为表锁(因为行锁是对索引项加的锁，而name没有索引)。
 
-                commit;
+            接下来，我们再针对name字段建立索引，索引建立之后，再次做一个测试：
 
-            --给名字创建索引
-            create index idx_name on m_stu(name);
+            此时我们可以看到，客户端一，开启事务，然后依然是根据name进行更新。而客户端二，在更新id为3
+            的数据时，更新成功，并未进入阻塞状态。 这样就说明，我们根据索引字段进行更新操作，就可以避
+            免行锁升级为表锁的情况。
 
-            左侧:
-                begin;
+        左侧:
+            begin;
 
-                update m_stu set name='Lei' where name='lily';
-                Query OK, 0 rows affected (0.00 sec)
-                Rows matched: 0  Changed: 0  Warnings: 0
+            mysql> update m_stu set name='Lei' where name='lily';
+            Query OK, 1 row affected (0.32 sec)
+            Rows matched: 1  Changed: 1  Warnings: 0
 
-                commit;
+            commit;
 
-            右侧:
-                begin;
+        右侧:
+            begin;
 
-                update m_stu set name='PHP' where id=3; -- 不会卡住,因为上面给name添加索引了
-                Query OK, 0 rows affected (0.00 sec)
-                Rows matched: 1  Changed: 0  Warnings: 0
+            update m_stu set name='PHP' where id=3;   -- 卡住,根据name字段进行更新时，name字段是没有索引的，如果没有索引，此时行锁会升级为表锁
+            Query OK, 1 row affected (1 min 5.44 sec) -- 左侧提交才会插入
+            Rows matched: 1  Changed: 1  Warnings: 0
 
-                commit;
+            commit;
+
+        --给名字创建索引
+        create index idx_name on m_stu(name);
+
+        左侧:
+            begin;
+
+            update m_stu set name='Lei' where name='lily';
+            Query OK, 0 rows affected (0.00 sec)
+            Rows matched: 0  Changed: 0  Warnings: 0
+
+            commit;
+
+        右侧:
+            begin;
+
+            update m_stu set name='PHP' where id=3; -- 不会卡住,因为上面给name添加索引了
+            Query OK, 0 rows affected (0.00 sec)
+            Rows matched: 1  Changed: 0  Warnings: 0
+
+            commit;
 
 
 3 间隙锁&临键锁
-    默认情况下，InnoDB在 REPEATABLE READ事务隔离级别运行，InnoDB使用 next-key 锁进行搜
+    默认情况下，InnoDB在 REPEATABLE READ 事务隔离级别运行，InnoDB使用 next-key 锁进行搜
     索和索引扫描，以防止幻读。
         - 索引上的等值查询(唯一索引)，给不存在的记录加锁时, 优化为间隙锁 。
         - 索引上的等值查询(非唯一普通索引)，向右遍历时最后一个值不满足查询需求时，next-keylock 退化为间隙锁。

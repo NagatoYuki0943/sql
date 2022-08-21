@@ -19,7 +19,7 @@
         我们在讲解事务原理的时候，主要就是来研究一下redolog，undolog以及MVCC。
 
 
-2 redo log (PDF)
+2 redo log (PDF) 持久性
     重做日志，记录的是事务提交时数据页的物理修改，是用来实现事务的持久性。
     该日志文件由两部分组成：重做日志缓冲（redo log buffer）以及重做日志文件（redo log
     file）,前者是在内存中，后者在磁盘中。当事务提交之后会把所有修改信息都存到该日志文件中, 用
@@ -51,15 +51,13 @@
     种先写日志的方式，称之为 WAL（Write-Ahead Logging）。
 
 
-3 undo log
-    回滚日志，用于记录数据被修改前的信息 , 作用包含两个 : 提供回滚(保证事务的原子性) 和
-    MVCC(多版本并发控制) 。
+3 undo logg (PDF) 原子性
+    回滚日志，用于记录数据被修改前的信息 , 作用包含两个 : 提供回滚(保证事务的原子性) 和 MVCC(多版本并发控制) 。
+
     undo log和redo log记录物理日志不一样，它是逻辑日志。可以认为当delete一条记录时，undo
     log中会记录一条对应的insert记录，反之亦然，当update一条记录时，它记录一条对应相反的
     update记录。当执行rollback时，就可以从undo log中的逻辑记录读取到相应的内容并进行回滚。
 
-    Undo log销毁：undo log在事务执行时产生，事务提交时，并不会立即删除undo log，因为这些
-    日志可能还用于MVCC。
+    Undo log销毁：undo log在事务执行时产生，事务提交时，并不会立即删除undo log，因为这些日志可能还用于MVCC。
 
-    Undo log存储：undo log采用段的方式进行管理和记录，存放在前面介绍的 rollback segment
-    回滚段中，内部包含1024个undo log segment。
+    Undo log存储：undo log采用段的方式进行管理和记录，存放在前面介绍的 rollback segment回滚段中，内部包含1024个undo log segment。
