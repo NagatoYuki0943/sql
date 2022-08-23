@@ -114,8 +114,8 @@
                     Relay_Log_File: 645e64df4888-relay-bin.000003
                         Relay_Log_Pos: 321
                 Relay_Source_Log_File: binlog.000009
-                Replica_IO_Running: Yes
-                Replica_SQL_Running: Yes
+                Replica_IO_Running: Yes                 -- important
+                Replica_SQL_Running: Yes                -- important
                     Replicate_Do_DB:
                 Replicate_Ignore_DB:
                 Replicate_Do_Table:

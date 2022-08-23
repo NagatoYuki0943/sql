@@ -20,57 +20,50 @@
         <?xml version="1.0"?>
         <!DOCTYPE mycat:schema SYSTEM "schema.dtd">
         <mycat:schema xmlns:mycat="http://io.mycat/">
-        <schema name="DB01" checkSQLschema="true" sqlMaxLimit="100">
-        <table name="TB_ORDER" dataNode="dn1,dn2,dn3" rule="auto-sharding-long"
-        />
-        </schema>
-        <dataNode name="dn1" dataHost="dhost1" database="db01" />
-        <dataNode name="dn2" dataHost="dhost2" database="db01" />
-        <dataNode name="dn3" dataHost="dhost3" database="db01" />
-        <dataHost name="dhost1" maxCon="1000" minCon="10" balance="0"
-        writeType="0" dbType="mysql" dbDriver="jdbc" switchType="1"
-        slaveThreshold="100">
-        <heartbeat>select user()</heartbeat>
-        <writeHost host="master" url="jdbc:mysql://192.168.200.210:3306?
-        useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;characterEncoding=utf8"
-        user="root" password="1234" />
-        </dataHost>
-        <dataHost name="dhost2" maxCon="1000" minCon="10" balance="0"
-        writeType="0" dbType="mysql" dbDriver="jdbc" switchType="1"
-        slaveThreshold="100">
-        <heartbeat>select user()</heartbeat>
-        <writeHost host="master" url="jdbc:mysql://192.168.200.213:3306?
-        useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;characterEncoding=utf8"
-        user="root" password="1234" />
-        </dataHost>
-        <dataHost name="dhost3" maxCon="1000" minCon="10" balance="0"
-        writeType="0" dbType="mysql" dbDriver="jdbc" switchType="1"
-        slaveThreshold="100">
-        <heartbeat>select user()</heartbeat>
-        <writeHost host="master" url="jdbc:mysql://192.168.200.214:3306?
-        useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;characterEncoding=utf8"
-        user="root" password="1234" />
-        </dataHost>
+                   -- 逻辑库名
+            <schema name="DB01" checkSQLschema="true" sqlMaxLimit="100">
+                       -- 逻辑库表          关联的数据节点
+                <table name="TB_ORDER" dataNode="dn1,dn2,dn3" rule="auto-sharding-long"/>
+            </schema>
+
+            -- 三个数据节点            关联的节点主机    节点的数据库
+            <dataNode name="dn1" dataHost="dhost1" database="db01" />
+            <dataNode name="dn2" dataHost="dhost2" database="db01" />
+            <dataNode name="dn3" dataHost="dhost3" database="db01" />
+
+            -- 节点主机
+            <dataHost name="dhost1" maxCon="1000" minCon="10" balance="0" writeType="0" dbType="mysql" dbDriver="jdbc" switchType="1" slaveThreshold="100">
+                <heartbeat>select user()</heartbeat>
+                <writeHost host="master" url="jdbc:mysql://192.168.200.210:3306?useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;characterEncoding=utf8" user="root" password="1234" />
+            </dataHost>
+            <dataHost name="dhost2" maxCon="1000" minCon="10" balance="0" writeType="0" dbType="mysql" dbDriver="jdbc" switchType="1" slaveThreshold="100">
+                <heartbeat>select user()</heartbeat>
+                <writeHost host="master" url="jdbc:mysql://192.168.200.213:3306?useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;characterEncoding=utf8" user="root" password="1234" />
+            </dataHost>
+            <dataHost name="dhost3" maxCon="1000" minCon="10" balance="0" writeType="0" dbType="mysql" dbDriver="jdbc" switchType="1" slaveThreshold="100">
+                <heartbeat>select user()</heartbeat>
+                <writeHost host="master" url="jdbc:mysql://192.168.200.214:3306?useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;characterEncoding=utf8" user="root" password="1234" />
+            </dataHost>
         </mycat:schema>
 
     2). server.xml
-        需要在server.xml中配置用户名、密码，以及用户的访问权限信息，具体的配置如下：
+        需要在 server.xml 中配置用户名、密码，以及用户的访问权限信息，具体的配置如下：
         <user name="root" defaultAccount="true">
-        <property name="password">123456</property>
-        <property name="schemas">DB01</property>
-        <!-- 表级 DML 权限设置 -->
-        <!--
-        <privileges check="true">
-        <schema name="DB01" dml="0110" >
-        <table name="TB_ORDER" dml="1110"></table>
-        </schema>
-        </privileges>
-        -->
+            <property name="password">123456</property>
+            <property name="schemas">DB01</property>
+            <!-- 表级 DML 权限设置 -->
+            <!--
+            <privileges check="true">
+                <schema name="DB01" dml="0110" >  -- 访问的逻辑库
+                <table name="TB_ORDER" dml="1110"></table>
+                </schema>
+            </privileges>
+            -->
         </user>
         <user name="user">
-        <property name="password">123456</property>
-        <property name="schemas">DB01</property>
-        <property name="readOnly">true</property>
+            <property name="password">123456</property>
+            <property name="schemas">DB01</property>
+            <property name="readOnly">true</property>
         </user>
 
     上述的配置表示，定义了两个用户 root 和 user ，这两个用户都可以访问 DB01 这个逻辑库，访
