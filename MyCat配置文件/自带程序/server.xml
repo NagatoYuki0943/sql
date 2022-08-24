@@ -12,7 +12,7 @@
 	<system>
 	<property name="nonePasswordLogin">0</property> <!-- 0为需要密码登陆、1为不需要密码登陆 ,默认为0，设置为1则需要指定默认账户-->
 	<property name="useHandshakeV10">1</property>
-	<property name="useSqlStat">1</property>  <!-- 1为开启实时统计、0为关闭 -->
+	<property name="useSqlStat">0</property>  <!-- 1为开启实时统计、0为关闭 -->
 	<property name="useGlobleTableCheck">0</property>  <!-- 1为开启全加班一致性检测、0为关闭 -->
 		<property name="sqlExecuteTimeout">300</property>  <!-- SQL 执行超时 单位:秒-->
 		<property name="sequnceHandlerType">2</property>
@@ -23,7 +23,7 @@
       <!--  <property name="useCompression">1</property>--> <!--1为开启mysql压缩协议-->
         <!--  <property name="fakeMySQLVersion">5.6.20</property>--> <!--设置模拟的MySQL版本号-->
 	<!-- <property name="processorBufferChunk">40960</property> -->
-	<!--
+	<!-- 
 	<property name="processors">1</property>
 	<property name="processorExecutor">32</property>
 	 -->
@@ -36,8 +36,7 @@
 		<!--<property name="frontSocketNoDelay">1</property>-->
 		<!--<property name="processorExecutor">16</property>-->
 		<!--
-			<property name="serverPort">8066</property>
-			<property name="managerPort">9066</property>
+			<property name="serverPort">8066</property> <property name="managerPort">9066</property>
 			<property name="idleTimeout">300000</property> <property name="bindIp">0.0.0.0</property>
 			<property name="dataNodeIdleCheckPeriod">300000</property> 5 * 60 * 1000L; //连接空闲检查
 			<property name="frontWriteQueueSize">4096</property> <property name="processors">32</property> -->
@@ -101,21 +100,22 @@
 
 	<user name="root" defaultAccount="true">
 		<property name="password">123456</property>
-		<property name="schemas">DB01</property>
+		<property name="schemas">TESTDB</property>
 
 		<!-- 表级 DML 权限设置 -->
 		<!--
-		<privileges check="true">
-			<schema name="DB01" dml="0110" >
-				<table name="TB_ORDER" dml="1110"></table>
+		<privileges check="false">
+			<schema name="TESTDB" dml="0110" >
+				<table name="tb01" dml="0000"></table>
+				<table name="tb02" dml="1111"></table>
 			</schema>
 		</privileges>
 		 -->
 	</user>
 
 	<user name="user">
-		<property name="password">123456</property>
-		<property name="schemas">DB01</property>
+		<property name="password">user</property>
+		<property name="schemas">TESTDB</property>
 		<property name="readOnly">true</property>
 	</user>
 

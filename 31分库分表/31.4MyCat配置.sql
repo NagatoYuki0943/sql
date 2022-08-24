@@ -7,59 +7,92 @@
         - datanode标签
         - datahost标签
 
+    <schema name="DB01" checkSQLschema="true" sqlMaxLimit="100">
+                -- 逻辑库表          关联的数据节点           分片规则 auto-sharding-long 会引用conf/rule.xml
+        <table name="TB_ORDER" dataNode="dn1,dn2,dn3" rule="auto-sharding-long"/>
+    </schema>
+
     1 schema标签
         1). schema 定义逻辑库
-            (PDF)
+            <schema name="DB01" checkSQLschema="true" sqlMaxLimit="100"></schema>
+
             schema 标签用于定义 MyCat实例中的逻辑库 , 一个MyCat实例中, 可以有多个逻辑库 , 可以通
             过 schema 标签来划分不同的逻辑库。MyCat中的逻辑库的概念，等同于MySQL中的database概念
             , 需要操作某个逻辑库下的表时, 也需要切换逻辑库(use xxx)。
 
             核心属性：
-                - name：指定自定义的逻辑库库名
+                - name：          指定自定义的逻辑库库名
                 - checkSQLschema：在SQL语句操作时指定了数据库名称，执行时是否自动去除；true：自动去除，false：不自动去除
-                - sqlMaxLimit：如果未指定limit进行查询，列表查询模式查询多少条记录
+                                  true: select * from 数据库名.数据表名; 会自动去除数据库名,不用使用 use 数据库名;就能使用数据表
+                - sqlMaxLimit：   如果未指定limit进行查询，列表查询模式查询多少条记录(最多100条)
 
         2). schema 中的table定义逻辑表
-            (PDF)
+                    -- 逻辑库表          关联的数据节点           分片规则 auto-sharding-long 会引用conf/rule.xml
+            <table name="TB_ORDER" dataNode="dn1,dn2,dn3" rule="auto-sharding-long"/>
+
             table 标签定义了MyCat中逻辑库schema下的逻辑表 , 所有需要拆分的表都需要在table标签中定义 。
 
             核心属性：
-                - name：定义逻辑表表名，在该逻辑库下唯一
-                - dataNode：定义逻辑表所属的dataNode，该属性需要与dataNode标签中name对应；多个
-                - dataNode逗号分隔
-                - rule：分片规则的名字，分片规则名字是在rule.xml中定义的
+                - name：      定义逻辑表表名，在该逻辑库下唯一
+                - dataNode：  定义逻辑表所属的dataNode，该属性需要与dataNode标签中name对应；多个dataNode逗号分隔
+                - rule：      分片规则的名字，分片规则名字是在 rule.xml 中定义的
                 - primaryKey：逻辑表对应真实表的主键
-                - type：逻辑表的类型，目前逻辑表只有全局表和普通表，如果未配置，就是普通表；全局表，配置为 global
+                - type：      逻辑表的类型，目前逻辑表只有全局表和普通表，如果未配置，就是普通表；全局表，配置为 global
+
 
     2 datanode标签
-        (PDF)
+        --        三个数据节点      关联的节点主机    节点的数据库
+        <dataNode name="dn1" dataHost="dhost1" database="db01" />
+        <dataNode name="dn2" dataHost="dhost2" database="db01" />
+        <dataNode name="dn3" dataHost="dhost3" database="db01" />
+
         核心属性：
-            - name：定义数据节点名称
+            - name：    定义数据节点名称
             - dataHost：数据库实例主机名称，引用自 dataHost 标签中name属性
             - database：定义分片所属数据库
 
+
     3 datahost标签
-        (PDF)
+        -- 节点主机    节点标识        最大最小连接数         负载均衡   写操作分发方式                      数据库驱动
+        <dataHost name="dhost1" maxCon="1000" minCon="10" balance="0" writeType="0" dbType="mysql" dbDriver="jdbc" switchType="1" slaveThreshold="100">
+            <heartbeat>select user()</heartbeat>
+            <writeHost host="master" url="jdbc:mysql://192.168.200.210:3306?useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;characterEncoding=utf8" user="root" password="1234" />
+        </dataHost>
+
         该标签在MyCat逻辑库中作为底层标签存在, 直接定义了具体的数据库实例、读写分离、心跳语句。
         核心属性：
-            - name：唯一标识，供上层标签使用
+            - name：         唯一标识，供上层标签使用
             - maxCon/minCon：最大连接数/最小连接数
-            - balance：负载均衡策略，取值 0,1,2,3
-            - writeType：写操作分发方式（0：写操作转发到第一个writeHost，第一个挂了，切换到第二个；1：写操作随机分发到配置的writeHost）
-            - dbDriver：数据库驱动，支持 native、jdbc
+            - balance：      负载均衡策略，取值 0,1,2,3
+            - writeType：    写操作分发方式（0：写操作转发到第一个writeHost，第一个挂了，切换到第二个；1：写操作随机分发到配置的writeHost）
+            - dbDriver：     数据库驱动，支持 native、jdbc
 
 
 2 rule.xml
-    rule.xml中定义所有拆分表的规则, 在使用过程中可以灵活的使用分片算法, 或者对同一个分片算法
-    使用不同的参数, 它让分片过程可配置化。主要包含两类标签：tableRule、Function。
-    (PDF)
+    rule.xml 中定义所有拆分表的规则, 在使用过程中可以灵活的使用分片算法, 或者对同一个分片算法使用不同的参数, 它让分片过程可配置化。主要包含两类标签：tableRule、Function。
+
+    <tableRule name="auto-sharding-long">   -- auto-sharding-long 会引用conf/rule.xml
+		<rule>
+			<columns>id</columns>
+			<algorithm>rang-long</algorithm>
+		</rule>
+	</tableRule>
+	<function name="rang-long"
+		class="io.mycat.route.function.AutoPartitionByLong">
+		<property name="mapFile">autopartition-long.txt</property>  -- 对应规则的txt文件
+	</function>
 
 
 3 server.xml
-    server.xml配置文件包含了MyCat的系统配置信息，主要有两个重要的标签：system、user。1). system标签
-    (PDF)
+    server.xml 配置文件包含了MyCat的系统配置信息，主要有两个重要的标签：system、user。1). system标签
 
     1). system标签
+        <system>
+            <property name="nonePasswordLogin">0</property> <!-- 0为需要密码登陆、1为不需要密码登陆 ,默认为0，设置为1则需要指定默认账户-->
+            <property name="useHandshakeV10">1</property>
+            <property name="useSqlStat">0</property>  <!-- 1为开启实时统计、0为关闭 -->
+        </system>
+
         主要配置MyCat中的系统配置信息，对应的系统配置项及其含义，如下：
 
         属性                        取值         含义
@@ -75,8 +108,8 @@
         subqueryRelationshipCheck   true,false  子查询中存在关联查询的情况下,检查关联字段中是否有分片字段 .默认 false
         useCompression              0,1         开启mysql压缩协议 , 0 : 关闭, 1 : 开启
         fakeMySQLVersion            5.5,5.6     设置模拟的MySQL版本号
-        defaultSqlParser                        由于MyCat的最初版本使用了FoundationDB的SQL解析器, 在MyCat1.3后增加了Druid解析器, 所以要设置defaultSqlParser属
-                                                性来指定默认的解析器; 解析器有两个 :druidparser 和 fdbparser, 在MyCat1.4之后,默认是druidparser,fdbparser已经废除了
+        defaultSqlParser                        由于MyCat的最初版本使用了FoundationDB的SQL解析器, 在 MyCat1.3 后增加了Druid解析器, 所以要设置defaultSqlParser属
+                                                性来指定默认的解析器; 解析器有两个 :druidparser 和 fdbparser, 在 MyCat1.4 之后,默认是druidparser,fdbparser已经废除了
         processors                  1,2....     指定系统可用的线程数量, 默认值为CPU核心x 每个核心运行线程数量; processors 会影响processorBufferPool,
                                                 processorBufferLocalPercent,processorExecutor属性, 所有, 在性能调优时, 可以适当地修改processors值
         processorBufferChunk                    指定每次分配Socket Direct Buffer默认值为4096字节, 也会影响BufferPool长度,
@@ -95,16 +128,28 @@
     2). user标签
         配置MyCat中的用户、访问密码，以及用户针对于逻辑库、逻辑表的权限信息，具体的权限描述方式及
         配置说明如下：
-        (PDF)
+
+        <user name="root" defaultAccount="true">            -- 用户名
+            <property name="password">123456</property>     -- 密码
+            <property name="schemas">TESTDB</property>      -- 改用户可以访问的逻辑库,多个逻辑库之间逗号分隔
+
+            <!-- 表级 DML 权限设置 -->
+            <!--
+            <privileges check="false">                      -- 是否开启DML权限检查,默认false
+                <schema name="TESTDB" dml="0110" >          -- 配置指定逻辑库权限
+                    <table name="tb01" dml="0000"></table>  -- 配置指定逻辑表的权限,就近原则(配置了逻辑表就按照逻辑表算)
+                    <table name="tb02" dml="1111"></table>  -- 0000 1111 对应 IUSD(增,改,查,删)的权限
+                </schema>
+            </privileges>
+            -->
+        </user>
+
+        <user name="user">
+            <property name="password">user</property>
+            <property name="schemas">TESTDB</property>
+            <property name="readOnly">true</property>       -- 是否只读,默认false
+        </user>
 
         在测试权限操作时，我们只需要将 privileges 标签的注释放开。 在 privileges 下的schema
         标签中配置的dml属性配置的是逻辑库的权限。 在privileges的schema下的table标签的dml属性
         中配置逻辑表的权限。
-
-
-
-
-
-
-
-
