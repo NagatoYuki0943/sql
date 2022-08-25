@@ -17,12 +17,12 @@
     1). schema.xml
         <schema name="ITCAST" checkSQLschema="true" sqlMaxLimit="100">
             --                            多个节点
-            <table name="tb_log" dataNode="dn4,dn5,dn6" primaryKey="id" rule="mod-long" /> -- 分片规则 mod-long 求模运算,余数是几就放在哪一个节点
+            <table name="tb_log" dataNode="dn4,dn5,dn6" primaryKey="id" rule="mod-long"/> -- 分片规则 mod-long 求模运算,余数是几就放在哪一个节点
         </schema>
         --            节点名不同,但仍然关联相同的服务器,不过数据库是新的
-        <dataNode name="dn4" dataHost="dhost1" database="itcast" />
-        <dataNode name="dn5" dataHost="dhost2" database="itcast" />
-        <dataNode name="dn6" dataHost="dhost3" database="itcast" />
+        <dataNode name="dn4" dataHost="dhost1" database="itcast"/>
+        <dataNode name="dn5" dataHost="dhost2" database="itcast"/>
+        <dataNode name="dn6" dataHost="dhost3" database="itcast"/>
 
         tb_log表最终落在3个节点中，分别是 dn4、dn5、dn6 ，而具体的数据分别存储在 dhost1、dhost2、dhost3的itcast数据库中。
 
@@ -35,9 +35,9 @@
             <!-- 表级 DML 权限设置 -->
             <!--
             <privileges check="true">
-            <schema name="DB01" dml="0110" >
-            <table name="TB_ORDER" dml="1110"></table>
-            </schema>
+                <schema name="DB01" dml="0110" >
+                    <table name="TB_ORDER" dml="1110"></table>
+                </schema>
             </privileges>
             -->
         </user>

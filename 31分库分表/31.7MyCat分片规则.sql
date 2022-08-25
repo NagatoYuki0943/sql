@@ -161,11 +161,12 @@
 4 枚举分片 sharding-by-intfile-enumstatus
     1). 介绍
         通过在配置文件中配置可能的枚举值, 指定数据分布到不同数据节点上, 本规则适用于按照省份、性别、状态拆分数据等业务 。
+        比如 male female 分开存储
         (PDF)
 
     2). 配置
         schema.xml 中逻辑表配置：
-            <table name="tb_user" dataNode="dn4,dn5,dn6" rule="sharding-by-intfile-enumstatus"
+            <table name="tb_user" dataNode="dn4,dn5,dn6" rule="sharding-by-intfile-enumstatus">
 
         schema.xml 中数据节点配置：
             <dataNode name="dn4" dataHost="dhost1" database="itcast"/>
@@ -173,25 +174,27 @@
             <dataNode name="dn6" dataHost="dhost3" database="itcast"/>
 
         rule.xml 中分片规则配置：
+            <!-- 默认配置 -->
             <tableRule name="sharding-by-intfile">
                 <rule>
                     <columns>sharding_id</columns>
-                    <algorithm>hash-int</algorithm>    -- 对应下面的tableRule
+                    <algorithm>hash-int</algorithm>     -- 对应下面的tableRule
                 </rule>
             </tableRule>
-            <!-- 自己增加 tableRule -->
+            <!-- 自己增加 tableRule, 复制后修改columns即可 -->
             <tableRule name="sharding-by-intfile-enumstatus">
                 <rule>
-                    <columns>status</columns>
-                    <algorithm>hash-int</algorithm>    -- 对应下面的tableRule
+                    <columns>status</columns>           -- 通过 status 判断放到哪一个节点
+                    <algorithm>hash-int</algorithm>     -- 对应下面的tableRule
                 </rule>
             </tableRule>
             <function name="hash-int" class="io.mycat.route.function.PartitionByFileMap">
-                <property name="defaultNode">2</property>
-                <property name="mapFile">partition-hash-int.txt</property>
+                <property name="defaultNode">2</property>                   -- 默认节点,默认为2,意思是不认识的值往第3个节点存储
+                <property name="mapFile">partition-hash-int.txt</property>  -- 对应的外部配置文件
             </function>
 
-        partition-hash-int.txt ，内容如下 :
+        partition-hash-int.txt ，内容如下:
+            -- 枚举值=节点id
             1=0
             2=1
             3=2
@@ -202,17 +205,20 @@
             algorithm       指定分片函数与function的对应关系
             class           指定该分片算法对应的类
             mapFile         对应的外部配置文件
-            type            默认值为0 ; 0 表示Integer , 1 表示String
-            defaultNode     默认节点 ; 小于0 标识不设置默认节点 , 大于等于0代表设置默认节点 ;默认节点的所用:枚举分片时,如果碰到不识别的枚举值, 就让它路由到默认节点 ; 如果没有默认值,碰到不识别的则报错 。
+            type            默认值为0; 0 表示Integer, 1 表示String
+            defaultNode     默认节点;小于0 标识不设置默认节点,大于等于0代表设置默认节点;
+                            默认节点的所用:枚举分片时,如果碰到不识别的枚举值,就让它路由到默认节点;
+                            如果没有默认值,碰到不识别的则报错。
 
     3). 测试
         配置完毕后，重新启动MyCat，然后在mycat的命令行中，执行如下SQL创建表、并插入数据，查看数据分布情况。
-        CREATE TABLE tb_user (
-            id bigint(20) NOT NULL COMMENT 'ID',
-            username varchar(200) DEFAULT NULL COMMENT '姓名',
-            status int(2) DEFAULT '1' COMMENT '1: 未启用, 2: 已启用, 3: 已关闭',
-            PRIMARY KEY (`id`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+        create table tb_user (
+            id bigint(20) not null comment 'id',
+            username varchar(200) default null comment '姓名',
+            status int(2) default '1' comment '1: 未启用, 2: 已启用, 3: 已关闭',
+            primary key (`id`)
+        ) engine=innodb default charset=utf8mb4;
         insert into tb_user (id,username ,status) values(1,'Tom',1);
         insert into tb_user (id,username ,status) values(2,'Cat',2);
         insert into tb_user (id,username ,status) values(3,'Rose',3);
@@ -225,31 +231,37 @@
         insert into tb_user (id,username ,status) values(10,'Lily',1);
 
 
-5 应用指定算法
+5 应用指定算法 sharding-by-substring
     1). 介绍
-        运行阶段由应用自主决定路由到那个分片 , 直接根据字符子串（必须是数字）计算分片号。
+        运行阶段由应用自主决定路由到那个分片, 直接根据字符子串（必须是数字）计算分片号。
+        比如某一个字段的前2个数字判断放到哪一个数据库
+        00xxxx: 0
+        01xxxx: 1
+        02xxxx: 2
         (PDF)
 
     2). 配置
         schema.xml 中逻辑表配置：
             <!-- 应用指定算法 -->
-            <table name="tb_app" dataNode="dn4,dn5,dn6" rule="sharding-by-substring" />
+            <table name="tb_app" dataNode="dn4,dn5,dn6" rule="sharding-by-substring"/>
+
         schema.xml 中数据节点配置：
-            <dataNode name="dn4" dataHost="dhost1" database="itcast" />
-            <dataNode name="dn5" dataHost="dhost2" database="itcast" />
-            <dataNode name="dn6" dataHost="dhost3" database="itcast" />
+            <dataNode name="dn4" dataHost="dhost1" database="itcast"/>
+            <dataNode name="dn5" dataHost="dhost2" database="itcast"/>
+            <dataNode name="dn6" dataHost="dhost3" database="itcast"/>
+
         rule.xml 中分片规则配置：
             <tableRule name="sharding-by-substring">
                 <rule>
-                    <columns>id</columns>
+                    <columns>id</columns>                           -- 根据id截取
                     <algorithm>sharding-by-substring</algorithm>    -- 对应下面的tableRule
                 </rule>
             </tableRule>
             <function name="sharding-by-substring" class="io.mycat.route.function.PartitionDirectBySubString">
-                <property name="startIndex">0</property> <!-- zero-based -->
-                <property name="size">2</property>
-                <property name="partitionCount">3</property>
-                <property name="defaultPartition">0</property>
+                <property name="startIndex">0</property>        -- 字符子串起始索引zero-based
+                <property name="size">2</property>              -- 字符长度
+                <property name="partitionCount">3</property>    -- 分区(分片)数量
+                <property name="defaultPartition">0</property>  -- 默认分片(在分片数量定义时, 字符标示的分片编号不在分片数量内时,使用默认分片)
             </function>
 
         分片规则属性含义：
@@ -263,16 +275,17 @@
             defaultPartition    默认分片(在分片数量定义时, 字符标示的分片编号不在分片数量内时,使用默认分片)
 
         示例说明 :
-            id=05-100000002 , 在此配置中代表根据id中从 startIndex=0，开始，截取siz=2位数字即
-            05，05就是获取的分区，如果没找到对应的分片则默认分配到defaultPartition 。
+            id=05-100000002 , 在此配置中代表根据id中从 startIndex=0，开始，截取siz=2位数字即05，
+            05就是获取的分区，如果没找到对应的分片则默认分配到defaultPartition 。
 
     3). 测试
         配置完毕后，重新启动MyCat，然后在mycat的命令行中，执行如下SQL创建表、并插入数据，查看数据分布情况。
+
         create table tb_app (
-            id varchar(10) NOT NULL COMMENT 'ID',
-            name varchar(200) DEFAULT NULL COMMENT '名称',
-            PRIMARY KEY (`id`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+            id varchar(10) not null comment 'id',
+            name varchar(200) default null comment '名称',
+            primary key (`id`)
+        ) engine=innodb default charset=utf8mb4;
         insert into tb_app (id,name) values('0000001','Testx00001');
         insert into tb_app (id,name) values('0100001','Test100001');
         insert into tb_app (id,name) values('0100002','Test200001');
@@ -284,7 +297,17 @@
     1). 介绍
         该算法类似于十进制的求模运算，但是为二进制的操作，例如，取 id 的二进制低 10 位 与
         1111111111 进行位 & 运算，位与运算最小值为 0000000000，最大值为1111111111，转换为十
-        进制，也就是位于0-1023之间。
+        进制，也就是位于0-1023之间。 0000000000(2) = 0 1111111111(2) = 2^10-1 = 1023
+
+        xxxx1000010101 origin
+            1111111111
+            1000010101 result   0 <= result <= 1023
+
+        -- 按照与的结果进行运算
+        0~255:    0
+        256~512:  1
+        513~1023: 2
+
         (PDF)
         特点：
             - 如果是求模，连续的值，分别分配到各个不同的分片；但是此算法会将连续的值可能分配到相同的分片，降低事务处理的难度。
@@ -309,8 +332,8 @@
             </tableRule>
             <!-- 分片总长度为1024，count与length数组长度必须一致； -->
             <function name="sharding-by-long-hash" class="io.mycat.route.function.PartitionByLong">
-                <property name="partitionCount">2,1</property>
-                <property name="partitionLength">256,512</property>
+                <property name="partitionCount">2,1</property>      -- 分片个数列表 2代表前面2个分片节点的长度是256,1代表后面1个分片节点长度512
+                <property name="partitionLength">256,512</property> -- 分片范围列表 长度之和必须为1024
             </function>
 
         分片规则属性含义：
@@ -318,26 +341,28 @@
             columns         标识将要分片的表字段名
             algorithm       指定分片函数与function的对应关系
             class           指定该分片算法对应的类
-            partitionCount  分片个数列表
-            partitionLength 分片范围列表
+            partitionCount  数组,分片个数列表
+            partitionLength 数组,分片范围列表
 
-        约束 :
+        约束:
             1). 分片长度 : 默认最大2^10 , 为 1024 ;
             2). count, length的数组长度必须是一致的 ;
             以上分为三个分区:0-255,256-511,512-1023
 
-        示例说明 :
+        示例说明:
+            生成长度为1024的字符串,前256个都为0,后256个都为1,最后512个为2,代表结果改放到哪一个节点
+            515 & 1023 = 100 0000 0011 & 11 1111 1111 = 100 0000 0011 = 515 放到节点3
             (PDF)
 
     3). 测试
         配置完毕后，重新启动MyCat，然后在mycat的命令行中，执行如下SQL创建表、并插入数据，查看数据分布情况。
 
-        CREATE TABLE tb_longhash (
-            id int(11) NOT NULL COMMENT 'ID',
-            name varchar(200) DEFAULT NULL COMMENT '名称',
-            firstChar char(1) COMMENT '首字母',
-            PRIMARY KEY (`id`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        create table tb_longhash (
+            id int(11) not null comment 'id',
+            name varchar(200) default null comment '名称',
+            firstchar char(1) comment '首字母',
+            primary key (`id`)
+        ) engine=innodb default charset=utf8mb4;
         insert into tb_longhash (id,name,firstChar) values(1,'七匹狼','Q');
         insert into tb_longhash (id,name,firstChar) values(2,'八匹狼','B');
         insert into tb_longhash (id,name,firstChar) values(3,'九匹狼','J');
@@ -351,7 +376,8 @@
 
 7 字符串hash解析算法 sharding-by-stringhash
     1). 介绍
-        截取字符串中的指定位置的子字符串, 进行hash算法， 算出分片。
+        截取字符串中的指定位置的子字符串, 进行hash算法，算出分片。
+        hash(字符串) & 1111111111(2)
         (PDF)
 
     2). 配置
@@ -365,15 +391,15 @@
         rule.xml 中分片规则配置：
             <tableRule name="sharding-by-stringhash">
                 <rule>
-                    <columns>name</columns>
-                    <algorithm>sharding-by-stringhash</algorithm>    -- 对应下面的tableRule
+                    <columns>name</columns>                         -- 按照name分片
+                    <algorithm>sharding-by-stringhash</algorithm>   -- 对应下面的tableRule
                 </rule>
             </tableRule>
             <function name="sharding-by-stringhash"
             class="io.mycat.route.function.PartitionByString">
-                <property name="partitionLength">512</property> <!-- zero-based -->
-                <property name="partitionCount">2</property>
-                <property name="hashSlice">0:2</property>
+                <property name="partitionLength">512</property> -- hash求模基数   基数 * 分区数 = 1024
+                <property name="partitionCount">2</property>    -- 分区数
+                <property name="hashSlice">0:2</property>       -- hash运算位 0 1 2 长度为3
             </function>
 
         分片规则属性含义：
@@ -381,12 +407,15 @@
             columns             标识将要分片的表字段
             algorithm           指定分片函数与function的对应关系
             class               指定该分片算法对应的类
-            partitionLength     hash求模基数 ; length*count=1024 (出于性能考虑)
+            partitionLength     hash求模基数; length*count=1024 (出于性能考虑)
             partitionCount      分区数
-            hashSlice           hash运算位 , 根据子字符串的hash运算 ; 0 代表 str.length(), -1 代表 str.length()-1 , 大于0只代表数字自身 ; 可以理解为substring（start，end），start为0则只表示0
+            hashSlice           hash运算位 , 根据子字符串的hash运算; 0 代表 str.length(), -1 代表 str.length()-1, 大于0只代表数字自身;
+                                可以理解为substring（start，end），start为0则只表示0
 
         示例说明：
-            (PDF)
+            字符串hash后与1023的结果为0~511就放到1表,结果为512~1024放到2表
+            生成长度为1024的字符串,前512个都为0,后512个都为1,代表结果改放到哪一个节点
+            world -> sub(world, 0, 3) -> wor -> hash -> 26629 & 1023 = 5 放到节点1
 
     3). 测试
         配置完毕后，重新启动MyCat，然后在mycat的命令行中，执行如下SQL创建表、并插入数据，查看数据分布情况。
@@ -402,9 +431,12 @@
         insert into tb_strhash (name,content) values('TOMCAT', UUID());
 
 
-8 按天分片算法
+8 按天分片算法 sharding-by-date
     1). 介绍
         按照日期及对应的时间周期来分片。
+        第一个10天放到第一个分片
+        第二个10天放到第二个分片
+        第三个10天放到第三个分片
         (PDF)
 
     2). 配置
@@ -419,20 +451,20 @@
         rule.xml 中分片规则配置：
             <tableRule name="sharding-by-date">
                 <rule>
-                    <columns>create_time</columns>
-                    <algorithm>sharding-by-date</algorithm>    -- 对应下面的tableRule
+                    <columns>create_time</columns>              -- 按照日期分片
+                    <algorithm>sharding-by-date</algorithm>     -- 对应下面的tableRule
                 </rule>
             </tableRule>
             <function name="sharding-by-date" class="io.mycat.route.function.PartitionByDate">
                 <property name="dateFormat">yyyy-MM-dd</property>
-                <property name="sBeginDate">2022-01-01</property>
-                <property name="sEndDate">2022-01-30</property>
-                <property name="sPartionDay">10</property>
+                <property name="sBeginDate">2022-01-01</property>   -- 开始日期
+                <property name="sEndDate">2022-01-30</property>     -- 结束日期 结束~开始为30天,每10天一个节点,所以必须有3个节点,否则报错
+                <property name="sPartionDay">10</property>          -- 每10天放到一个节点,超过结束日期会重新循环,插入到开始的数据库
             </function>
             <!--
             从开始时间开始，每10天为一个分片，到达结束时间之后，会重复开始分片插入
-            配置表的 dataNode 的分片，必须和分片规则数量一致，例如 2022-01-01 到 2022-12-31 ，每
-            10天一个分片，一共需要37个分片。
+            配置表的 dataNode 的分片数必须和分片规则数量一致，
+            例如 2022-01-01 到 2022-12-31 ，每10天一个分片，一共需要37个分片。
             -->
 
         分片规则属性含义：
@@ -458,10 +490,10 @@
             insert into tb_datepart(id,name ,create_time) values(4,'Coco','2022-01-20');
             insert into tb_datepart(id,name ,create_time) values(5,'Rose2','2022-01-21');
             insert into tb_datepart(id,name ,create_time) values(6,'Coco2','2022-01-30');
-            insert into tb_datepart(id,name ,create_time) values(7,'Coco3','2022-01-31');
+            insert into tb_datepart(id,name ,create_time) values(7,'Coco3','2022-01-31'); -- 超过2022-01-30会重新计数
 
 
-9 自然月分片
+9 自然月分片 sharding-by-month
     1). 介绍
         使用场景为按照月份来分片, 每个自然月为一个分片。
         (PDF)
@@ -478,19 +510,18 @@
         rule.xml 中分片规则配置：
             <tableRule name="sharding-by-month">
                 <rule>
-                    <columns>create_time</columns>
-                    <algorithm>partbymonth</algorithm>    -- 对应下面的tableRule
+                    <columns>create_time</columns>          -- 按照日期分片
+                    <algorithm>partbymonth</algorithm>      -- 对应下面的tableRule
                 </rule>
             </tableRule>
             <function name="partbymonth" class="io.mycat.route.function.PartitionByMonth">
                 <property name="dateFormat">yyyy-MM-dd</property>
-                <property name="sBeginDate">2022-01-01</property>
+                <property name="sBeginDate">2022-01-01</property>   -- 开始到结束一个3个月,放到3个分片中,4月开始会重新到第一个节点循环
                 <property name="sEndDate">2022-03-31</property>
             </function>
             <!--
             从开始时间开始，一个月为一个分片，到达结束时间之后，会重复开始分片插入
-            配置表的 dataNode 的分片，必须和分片规则数量一致，例如 2022-01-01 到 2022-12-31 ，一
-            共需要12个分片。
+            配置表的dataNode的分片数必须和分片规则数量一致，例如 2022-01-01 到 2022-12-31，一共需要12个分片。
             -->
 
         分片规则属性含义：
@@ -516,5 +547,5 @@
         insert into tb_monthpart(id,name ,create_time) values(5,'Rose2','2022-02-25');
         insert into tb_monthpart(id,name ,create_time) values(6,'Coco2','2022-03-10');
         insert into tb_monthpart(id,name ,create_time) values(7,'Coco3','2022-03-31');
-        insert into tb_monthpart(id,name ,create_time) values(8,'Coco4','2022-04-10');
+        insert into tb_monthpart(id,name ,create_time) values(8,'Coco4','2022-04-10');  -- 4月到第一个节点
         insert into tb_monthpart(id,name ,create_time) values(9,'Coco5','2022-04-30');

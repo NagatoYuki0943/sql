@@ -47,21 +47,15 @@
         -- 节点主机    节点标识        最大最小连接数         负载均衡   写操作分发方式                      数据库驱动
         <dataHost name="dhost1" maxCon="1000" minCon="10" balance="0" writeType="0" dbType="mysql" dbDriver="jdbc" switchType="1" slaveThreshold="100">
             <heartbeat>select user()</heartbeat>
-            <writeHost host="master" url="jdbc:mysql://192.168.200.210:3306?
-            useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;characterEncoding=utf8"
-            user="root" password="1234" />
+            <writeHost host="master" url="jdbc:mysql://192.168.200.210:3306?useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;characterEncoding=utf8" user="root" password="1234" />
         </dataHost>
         <dataHost name="dhost2" maxCon="1000" minCon="10" balance="0" writeType="0" dbType="mysql" dbDriver="jdbc" switchType="1" slaveThreshold="100">
             <heartbeat>select user()</heartbeat>
-            <writeHost host="master" url="jdbc:mysql://192.168.200.213:3306?
-            useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;characterEncoding=utf8"
-            user="root" password="1234" />
+            <writeHost host="master" url="jdbc:mysql://192.168.200.213:3306?useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;characterEncoding=utf8" user="root" password="1234" />
         </dataHost>
         <dataHost name="dhost3" maxCon="1000" minCon="10" balance="0" writeType="0" dbType="mysql" dbDriver="jdbc" switchType="1" slaveThreshold="100">
             <heartbeat>select user()</heartbeat>
-            <writeHost host="master" url="jdbc:mysql://192.168.200.214:3306?
-            useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;characterEncoding=utf8"
-            user="root" password="1234" />
+            <writeHost host="master" url="jdbc:mysql://192.168.200.214:3306?useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;characterEncoding=utf8" user="root" password="1234" />
         </dataHost>
 
 
@@ -72,9 +66,9 @@
             <!-- 表级 DML 权限设置 -->
             <!--
             <privileges check="true">
-            <schema name="DB01" dml="0110" >
-            <table name="TB_ORDER" dml="1110"></table>
-            </schema>
+                <schema name="DB01" dml="0110" >
+                    <table name="TB_ORDER" dml="1110"></table>
+                </schema>
             </privileges>
             -->
         </user>

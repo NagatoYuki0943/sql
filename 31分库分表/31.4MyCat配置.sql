@@ -42,9 +42,9 @@
 
     2 datanode标签
         --        三个数据节点      关联的节点主机    节点的数据库
-        <dataNode name="dn1" dataHost="dhost1" database="db01" />
-        <dataNode name="dn2" dataHost="dhost2" database="db01" />
-        <dataNode name="dn3" dataHost="dhost3" database="db01" />
+        <dataNode name="dn1" dataHost="dhost1" database="db01"/>
+        <dataNode name="dn2" dataHost="dhost2" database="db01"/>
+        <dataNode name="dn3" dataHost="dhost3" database="db01"/>
 
         核心属性：
             - name：    定义数据节点名称

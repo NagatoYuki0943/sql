@@ -1,5 +1,8 @@
 1 MyCat原理
     (PDF)
+    SQL -> 解析SQL -> 切片分析 -> 路由分析 -> 读写分离分析 -> 查询数据库
+    数据<- 分页处理 <- 排序处理 <- 聚合处理 <- 结果合并 <---------┘
+
     在MyCat中，当执行一条SQL语句时，MyCat需要进行SQL解析、分片分析、路由分析、读写分离分析
     等操作，最终经过一系列的分析决定将当前的SQL语句到底路由到那几个(或哪一个)节点数据库，数据
     库将数据执行完毕后，如果有返回的结果，则将结果返回给MyCat，最终还需要在MyCat中进行结果合
@@ -13,7 +16,7 @@
 
 
 2 MyCat管理
-    Mycat默认开通2个端口，可以在server.xml中进行修改。
+    Mycat默认开通2个端口，可以在 server.xml 中进行修改。
         - 8066 数据访问端口，即进行 DML 和 DDL 操作。
         - 9066 数据库管理端口，即 mycat 服务管理控制功能，用于管理mycat的整个集群状态
 
@@ -23,18 +26,18 @@
     命令                含义
     show @@help         查看Mycat管理工具帮助文档
     show @@version      查看Mycat的版本
-    reload @@config     重新加载Mycat的配置文件
     show @@datasource   查看Mycat的数据源信息
     show @@datanode     查看MyCat现有的分片节点信息
     show @@threadpool   查看Mycat的线程池信息
     show @@sql          查看执行的SQL
     show @@sql.sum      查看执行的SQL统计
+    reload @@config     重新加载Mycat的配置文件
+
 
 3 MyCat-eye
     1 介绍
-    Mycat-web(Mycat-eye)是对mycat-server提供监控服务，功能不局限于对mycat-server使
-    用。他通过JDBC连接对Mycat、Mysql监控，监控远程服务器(目前仅限于linux系统)的cpu、内
-    存、网络、磁盘。
+    Mycat-web(Mycat-eye)是对mycat-server提供监控服务，功能不局限于对mycat-server使用。
+    他通过JDBC连接对Mycat、Mysql监控，监控远程服务器(目前仅限于linux系统)的cpu、内存、网络、磁盘。
     Mycat-eye运行过程中需要依赖zookeeper，因此需要先安装zookeeper。
 
     2 安装
