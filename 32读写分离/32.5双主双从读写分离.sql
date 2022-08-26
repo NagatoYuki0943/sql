@@ -4,42 +4,41 @@
 
     1). schema.xml
         配置逻辑库：
+                    -- 逻辑库名
             <schema name="ITCAST_RW2" checkSQLschema="true" sqlMaxLimit="100" dataNode="dn7">
+                -- 可以不指定逻辑表,不指定的话会加载数据节点的数据库中的全部表
             </schema>
+
         配置数据节点：
-            <dataNode name="dn7" dataHost="dhost7" database="db01" />
+            --        数据节点名        关联的节点主机    节点的数据库
+            <dataNode name="dn7" dataHost="dhost7" database="db01"/>
+
         配置节点主机：
-            <dataHost name="dhost7" maxCon="1000" minCon="10" balance="1" writeType="0"
-            dbType="mysql" dbDriver="jdbc" switchType="1" slaveThreshold="100">
-            <heartbeat>select user()</heartbeat>
-            <writeHost host="master1" url="jdbc:mysql://192.168.200.211:3306?
-            useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;characterEncoding=utf8"
-            user="root" password="1234" >
-            <readHost host="slave1" url="jdbc:mysql://192.168.200.212:3306?
-            useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;characterEncoding=utf8"
-            user="root" password="1234" />
-            </writeHost>
-            <writeHost host="master2" url="jdbc:mysql://192.168.200.213:3306?
-            useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;characterEncoding=utf8"
-            user="root" password="1234" >
-            <readHost host="slave2" url="jdbc:mysql://192.168.200.214:3306?
-            useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;characterEncoding=utf8"
-            user="root" password="1234" />
-            </writeHost>
+            -- 节点主机    节点标识        最大最小连接数         负载均衡   写操作分发方式                     数据库驱动
+            <dataHost name="dhost7" maxCon="1000" minCon="10" balance="1" writeType="0" dbType="mysql" dbDriver="jdbc" switchType="1" slaveThreshold="100">
+                <heartbeat>select user()</heartbeat>
+                <writeHost host="master1" url="jdbc:mysql://192.168.200.211:3306?useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;characterEncoding=utf8" user="root" password="1234" >
+                    <readHost host="slave1" url="jdbc:mysql://192.168.200.212:3306?useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;characterEncoding=utf8" user="root" password="1234" />
+                </writeHost>
+                <writeHost host="master2" url="jdbc:mysql://192.168.200.213:3306?useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;characterEncoding=utf8" user="root" password="1234" >
+                    <readHost host="slave2" url="jdbc:mysql://192.168.200.214:3306?useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;characterEncoding=utf8" user="root" password="1234" />
+                </writeHost>
             </dataHost>
+
         具体的对应情况如下：
             (PDF)
+
         属性说明：
             balance="1"
-                代表全部的 readHost 与 stand by writeHost 参与 select 语句的负载均衡，简
-                单的说，当双主双从模式(M1->S1，M2->S2，并且 M1 与 M2 互为主备)，正常情况下，
+                代表全部的 readHost 与 stand by writeHost 参与 select 语句的负载均衡，简单的说，
+                当双主双从模式(M1->S1，M2->S2，并且 M1 与 M2 互为主备)，正常情况下，
                 M2,S1,S2 都参与 select 语句的负载均衡 ;
             writeType
                 0 : 写操作都转发到第1台writeHost, writeHost1挂了, 会切换到writeHost2上;
                 1 : 所有的写操作都随机地发送到配置的writeHost上 ;
             switchType
                 -1 : 不自动切换
-                1 : 自动切换
+                1 :  自动切换
 
     2). user.xml
         配置root用户也可以访问到逻辑库 ITCAST_RW2。

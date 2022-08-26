@@ -7,8 +7,10 @@
         - datanode标签
         - datahost标签
 
+            -- 逻辑库名
     <schema name="DB01" checkSQLschema="true" sqlMaxLimit="100">
-                -- 逻辑库表          关联的数据节点           分片规则 auto-sharding-long 会引用conf/rule.xml
+        -- 可以不指定逻辑表,不指定的话会加载数据节点的数据库中的全部表
+        --         逻辑库表          关联的数据节点           分片规则 auto-sharding-long 会引用conf/rule.xml
         <table name="TB_ORDER" dataNode="dn1,dn2,dn3" rule="auto-sharding-long"/>
     </schema>
 
