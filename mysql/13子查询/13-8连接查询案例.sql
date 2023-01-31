@@ -56,8 +56,8 @@
     表: emp , dept
     连接条件: m_emp.dept_id = m_dept.id
 
-        select e.name, e.age, e.job,d.name from m_emp e, m_dept d where e.dept_id = d.id;
-        select e.name, e.age, e.job,d.name from m_emp e inner join m_dept d on e.dept_id = d.id;
+        select e.name,e.age,e.job,d.name from m_emp e, m_dept d where e.dept_id = d.id;
+        select e.name,e.age,e.job,d.name from m_emp e inner join m_dept d on e.dept_id = d.id;
         +--------+-----+--------------+--------+
         | name   | age | job          | name   |
         +--------+-----+--------------+--------+
@@ -85,8 +85,8 @@
     表: emp , dept
     连接条件: m_emp.dept_id = m_dept.id
 
-        select e.name, e.age, e.job ,d.name from m_emp e inner join m_dept d on e.dept_id = d.id where e.age < 30;
-        select e.name, e.age, e.job ,d.name from m_emp e, m_dept d where e.dept_id = d.id and e.age < 30;
+        select e.name,e.age,e.job,d.name from m_emp e inner join m_dept d on e.dept_id = d.id where e.age < 30;
+        select e.name,e.age,e.job,d.name from m_emp e,m_dept d where e.dept_id = d.id and e.age < 30;
         +--------+-----+--------------+--------+
         | name   | age | job          | name   |
         +--------+-----+--------------+--------+
@@ -312,7 +312,7 @@
             +------+--------+
 
         ②. 查询与 "鹿杖客" , "宋远桥" 的职位和薪资相同的员工信息
-            select * from m_emp where (job,salary) in ( select job, salary from m_emp where name = '鹿杖客' or name = '宋远桥');
+            select * from m_emp where (job,salary) in (select job, salary from m_emp where name = '鹿杖客' or name = '宋远桥');
             +----+--------+-----+------+--------+------------+-----------+---------+
             | id | name   | age | job  | salary | entrydate  | managerid | dept_id |
             +----+--------+-----+------+--------+------------+-----------+---------+
