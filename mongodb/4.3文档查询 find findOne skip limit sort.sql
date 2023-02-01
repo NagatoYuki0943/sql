@@ -82,9 +82,9 @@
 
 
     # 选择查询
-    db.comment.find({key:value})
+    db.comment.find({key: value})
 
-        articledb> db.comment.find({userid:"1003"})
+        articledb> db.comment.find({userid: "1003"})
         [
         {
             _id: '4',
@@ -112,7 +112,7 @@
 2. 如果你只需要返回符合条件的第一条数据，我们可以使用findOne命令来实现，语法和find一样。
     db.comment.findOne({key: value})
 
-        articledb> db.comment.findOne({userid:"1003"})
+        articledb> db.comment.findOne({userid: "1003"})
         {
         _id: '4',
         articleid: '100001',
@@ -126,7 +126,7 @@
 
     # 投影查询（Projection Query,返回部分字段）
     如果要查询结果返回部分字段，则需要使用投影查询（不显示所有字段，只显示指定的字段）。
-        articledb> db.comment.find({userid:"1003"}, {userid:1, nickname:1})
+        articledb> db.comment.find({userid: "1003"}, {userid: 1, nickname: 1})
         [
         { _id: '4', userid: '1003', nickname: '凯撒' },
         { _id: '5', userid: '1003', nickname: '凯撒' }
@@ -134,14 +134,14 @@
 
     默认 _id 会显示。
     如：查询结果只显示 、userid、nickname ，不显示 _id ：
-        articledb> db.comment.find({userid:"1003"}, {userid:1, nickname:1,_id:0})
+        articledb> db.comment.find({userid: "1003"}, {userid: 1, nickname: 1,_id: 0})
         [
         { userid: '1003', nickname: '凯撒' },
         { userid: '1003', nickname: '凯撒' }
         ]
 
     再例如：查询所有数据，但只显示 _id、userid、nickname :
-        articledb> db.comment.find({}, {userid:1, nickname:1})
+        articledb> db.comment.find({}, {userid: 1, nickname: 1})
         [
         {
             _id: ObjectId("63d8df3ba977742c956a6b51"),
@@ -172,11 +172,11 @@
     skip()  跳过 默认值0
     limit() 限制 默认值20
 
-        articledb> db.comment.find({}, {userid:1}).limit(2)
+        articledb> db.comment.find({}, {userid: 1}).limit(2)
         [ { _id: '1', userid: '1002' }, { _id: '2', userid: '1005' } ]
-        articledb> db.comment.find({}, {userid:1}).skip(2).limit(2)
+        articledb> db.comment.find({}, {userid: 1}).skip(2).limit(2)
         [ { _id: '3', userid: '1004' }, { _id: '4', userid: '1003' } ]
-        articledb> db.comment.find({}, {userid:1}).skip(4).limit(2)
+        articledb> db.comment.find({}, {userid: 1}).skip(4).limit(2)
         [ { _id: '5', userid: '1003' } ]
 
 
@@ -187,7 +187,7 @@
     skip(), limilt(), sort()三个放在一起执行的时候，执行的顺序是先 sort(), 然后是 skip()，最后是显示的 limit()，和命令编写顺序无关。
 
         # 对userid降序排列，并对访问量进行升序排列
-        articledb> db.comment.find({}, {userid:1, likenum:1}).sort({userid:-1, likenum:1})
+        articledb> db.comment.find({}, {userid: 1, likenum: 1}).sort({userid: -1, likenum: 1})
         [
         { _id: '2', userid: '1005', likenum: 888 },
         { _id: '3', userid: '1004', likenum: 666 },
@@ -251,7 +251,7 @@
     db.集合名称.find({ "field": { $ne:  value }})  // 不等于: field != value
 
     查询评论点赞数量大于700的记录
-        articledb> db.comment.find({likenum: {$gt:1000}})
+        articledb> db.comment.find({likenum: {$gt: 1000}})
         [
         {
             _id: '4',
@@ -279,28 +279,28 @@
 8. 包含查询 $in $nin
     包含使用 $in 操作符
     不包含使用 $nin 操作符
-    $in:  []
-    $nin: []
+    db.集合名称.find({ "field": { $in:  [] }})
+    db.集合名称.find({ "field": { $nin: [] }})
 
-        articledb> db.comment.find({userid: {$in: ["1003","1004"]}}, {userid:1})
+        articledb> db.comment.find({userid: {$in: ["1003", "1004"]}}, {userid: 1})
         [
         { _id: '3', userid: '1004' },
         { _id: '4', userid: '1003' },
         { _id: '5', userid: '1003' }
         ]
-        articledb> db.comment.find({userid: {$nin: ["1003","1004"]}}, {userid:1})
+        articledb> db.comment.find({userid: {$nin: ["1003", "1004"]}}, {userid: 1})
         [ { _id: '1', userid: '1002' }, { _id: '2', userid: '1005' } ]
 
 
 9. 条件连接查询 $and $or
     我们如果需要查询同时满足两个以上条件，需要使用 $and 操作符将条件进行关联
     如果两个以上条件之间是或者的关系，我们使用 $or 操作符进行关联
-    $and: [ { },{ },... ]
-    $or:  [ { },{ },... ]
+    db.集合名称.find({$and: [{}, {}...]})
+    db.集合名称.find({$or:  [{}, {}...]})
 
 
         # 查询点赞大于等于1000小于等于3000
-        articledb> db.comment.find({$and: [{likenum: {$gte:1000}}, {likenum: {$lte:3000}}]}, {userid:1})
+        articledb> db.comment.find({$and: [{likenum: {$gte: 1000}}, {likenum: {$lte: 3000}}]}, {userid: 1})
         [
         { _id: '1', userid: '1002' },
         { _id: '4', userid: '1003' },
@@ -309,7 +309,7 @@
 
 
         # 点赞小于1000或者大于2000
-        articledb> db.comment.find({$or: [{likenum: {$lt:1000}}, {likenum: {$gt:2000}}]}, {userid:1})
+        articledb> db.comment.find({$or: [{likenum: {$lt: 1000}}, {likenum: {$gt: 2000}}]}, {userid: 1})
         [
         { _id: '2', userid: '1005' },
         { _id: '3', userid: '1004' },

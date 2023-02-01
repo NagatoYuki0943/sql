@@ -1,4 +1,4 @@
-1. 单个文档插入 db.集合名称.insert(json) or db.集合名称.inserOne(json)
+1. 单个文档插入 db.集合名称.inserOne(json)
     注意事项:
         1. comment集合如果不存在，则会隐式创建
         2. mongo中的数字，默认情况下是double类型，如果要存整型，必须使用函数NumberInt(整型数字)，否则取出来就有问题了。
@@ -6,32 +6,9 @@
         4. 插入的数据没有指定 _id ，会自动生成主键值
         5. 如果某字段没值，可以赋值为null，或不写该字段。
 
-    使用insert() 或 save() 方法向集合中插入文档，语法如下：
-    db.集合名称.insert(
-        <document or array of documents>,
-        {
-            writeConcern: <document>,
-            ordered: <boolean>
-        }
-    )
 
         test> use articledb
         switched to db articledb
-        articledb> db.comment.insert(
-        ...                     {
-        ...                         "articleid":"100000",
-        ...                         "content":"今天天气真好，阳光明媚",
-        ...                         "userid":"1001",
-        ...                         "nickname":"Rose",
-        ...                         "createdatetime":new Date(),
-        ...                         "likenum":NumberInt(10),
-        ...                         "state":null
-        ...                     }
-        ...             )
-        {
-        acknowledged: true,
-        insertedIds: { '0': ObjectId("63d90000a977742c956a6b52") }  # 返回insertedIds
-        }
         articledb> db.comment.insertOne( { "articleid": "100000", "content": "今天天气真好，阳光明媚", "userid": "1001", "nickname": "Rose", "createdatetime": new Date(), "likenum": NumberInt(10), "state": null })
         {
         acknowledged: true,
@@ -62,7 +39,7 @@
         ]
 
 
-2. 批量插入 db.集合名称.insert([json...]) or db.集合名称.insertMany([json...])
+2. 批量插入 db.集合名称.insertMany([json...])
     db.集合名称.insertMany(
         [ <document 1> , <document 2>, ... ],
         {
@@ -71,21 +48,16 @@
         }
     )
 
-        articledb> db.comment.insert(
-                            [
-                                {"_id":"1","articleid":"100001","content":"我们不应该把清晨浪费在手机上，健康很重要，一杯温水幸福你我他 。","userid":"1002","nickname":"相忘于江湖","createdatetime":new Date("2019-08-05T22:08:15.522Z"),"likenum":NumberInt(1000),"state":"1"},
-                                {"_id":"2","articleid":"100001","content":"我夏天空腹喝凉开水，冬天喝温开水","userid":"1005","nickname":"伊人憔悴","createdatetime":new Date("2019-08-05T23:58:51.485Z"),"likenum":NumberInt(888),"state":"1"}
-                            ]
-                        )
-        { acknowledged: true, insertedIds: { '0': '1', '1': '2' } }
         articledb> db.comment.insertMany(
                             [
+                                {"_id":"1","articleid":"100001","content":"我们不应该把清晨浪费在手机上，健康很重要，一杯温水幸福你我他 。","userid":"1002","nickname":"相忘于江湖","createdatetime":new Date("2019-08-05T22:08:15.522Z"),"likenum":NumberInt(1000),"state":"1"},
+                                {"_id":"2","articleid":"100001","content":"我夏天空腹喝凉开水，冬天喝温开水","userid":"1005","nickname":"伊人憔悴","createdatetime":new Date("2019-08-05T23:58:51.485Z"),"likenum":NumberInt(888),"state":"1"},
                                 {"_id":"3","articleid":"100001","content":"我一直喝凉开水，冬天夏天都喝。","userid":"1004","nickname":"杰克船长","createdatetime":new Date("2019-08-06T01:05:06.321Z"),"likenum":NumberInt(666),"state":"1"},
                                 {"_id":"4","articleid":"100001","content":"专家说不能空腹吃饭，影响健康。","userid":"1003","nickname":"凯撒","createdatetime":new Date("2019-08-06T08:18:35.288Z"),"likenum":NumberInt(2000),"state":"1"},
                                 {"_id":"5","articleid":"100001","content":"研究表明，刚烧开的水千万不能喝，因为烫嘴。","userid":"1003","nickname":"凯撒","createdatetime":new Date("2019-08-06T11:01:02.521Z"),"likenum":NumberInt(3000),"state":"1"}
                             ]
                         )
-        { acknowledged: true, insertedIds: { '0': '3', '1': '4', '2': '5' } }
+        { acknowledged: true, insertedIds: { '0': '1', '1': '2', '2': '3', '3': '4', '4': '5' } }
         articledb> db.comment.find()
         [
         {
@@ -139,7 +111,6 @@
             state: '1'
         }
         ]
-
 
 
         如果某条数据插入失败，将会终止插入，但已经插入成功的数据不会回滚掉。

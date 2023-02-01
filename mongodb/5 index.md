@@ -393,7 +393,7 @@ db.集合名称.find(query,options).explain(options)
 
 关键点看： "stage" : "IXSCAN" ,基于索引的扫描
 
-### 4.2 涵盖的查询
+### 4.2 涵盖的查询(不回表查询)
 
 Covered Queries
 

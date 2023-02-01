@@ -27,9 +27,8 @@
         articledb> db
         articledb
 
-4. 数据库的删除
-    // 在数据库中执行
-    db.dropDatabase()
+4. 数据库的删除 db.dropDatabase()
 
-        articledb> db.dropDatabase()
-        { ok: 1, dropped: 'articledb' }
+    // 在数据库中执行
+    articledb> db.dropDatabase()
+    { ok: 1, dropped: 'articledb' }

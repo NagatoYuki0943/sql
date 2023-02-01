@@ -78,6 +78,8 @@
 
 
 删除多条 db.集合名称.deleteMany(query)
+    db.集合名称.deleteMany({}) # 查询为空删除全部数据
+
     articledb> db.comment.find({userid:"1003"})
     [
     {
