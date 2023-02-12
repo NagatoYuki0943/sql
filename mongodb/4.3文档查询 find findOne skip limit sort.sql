@@ -124,8 +124,10 @@
         state: '1'
         }
 
-    # 投影查询（Projection Query,返回部分字段）
+3. 投影查询（Projection Query,返回部分字段）
     如果要查询结果返回部分字段，则需要使用投影查询（不显示所有字段，只显示指定的字段）。
+    db.comment.findOne({key: value}, {key1: 1, _id: 0})
+
         articledb> db.comment.find({userid: "1003"}, {userid: 1, nickname: 1})
         [
         { _id: '4', userid: '1003', nickname: '凯撒' },
@@ -156,7 +158,7 @@
         ]
 
 
-3. 统计 db.文档名称.countDocuments(query, options)
+4. 统计 db.文档名称.countDocuments(query, options)
     - query:   查询选择条件。
     - options: 可选。用于修改计数的额外选项。
 
@@ -168,7 +170,7 @@
         2
 
 
-4. db.集合名称.find().skip(int).limit(int)
+5. db.集合名称.find().skip(int).limit(int)
     skip()  跳过 默认值0
     limit() 限制 默认值20
 
@@ -180,7 +182,7 @@
         [ { _id: '5', userid: '1003' } ]
 
 
-5. db.集合名称.find().sort(排序方式) 排序操作
+6. db.集合名称.find().sort(排序方式) 排序操作
     sort() 方法可以通过参数指定排序的字段
     并使用 1 和 -1 来指定排序的方式，其中 1 为升序排列，而 -1 是用 于降序排列。
 
@@ -197,7 +199,7 @@
         ]
 
 
-6. 正则的复杂条件查询 db.集合名称.find({字段: /正则表达式/})
+7. 正则的复杂条件查询 db.集合名称.find({字段: /正则表达式/})
     MongoDB的模糊查询是通过正则表达式的方式实现的。
     提示：正则表达式是js的语法，直接量的写法。
 
@@ -242,7 +244,7 @@
         ]
 
 
-7. 比较查询
+8. 比较查询
     <, <=, >, >= 这个操作符也是很常用的，格式如下
     db.集合名称.find({ "field": { $gt:  value }})  // 大于: field > value
     db.集合名称.find({ "field": { $lt:  value }})  // 小于: field < value
@@ -276,7 +278,7 @@
         ]
 
 
-8. 包含查询 $in $nin
+9. 包含查询 $in $nin
     包含使用 $in 操作符
     不包含使用 $nin 操作符
     db.集合名称.find({ "field": { $in:  [] }})
@@ -292,7 +294,7 @@
         [ { _id: '1', userid: '1002' }, { _id: '2', userid: '1005' } ]
 
 
-9. 条件连接查询 $and $or
+10. 条件连接查询 $and $or
     我们如果需要查询同时满足两个以上条件，需要使用 $and 操作符将条件进行关联
     如果两个以上条件之间是或者的关系，我们使用 $or 操作符进行关联
     db.集合名称.find({$and: [{}, {}...]})
